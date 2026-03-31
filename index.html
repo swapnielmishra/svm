@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Higher Education Pension Calculator</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #0d0f14; --surface: #13161d; --surface2: #1a1e27;
+    --border: #252a36; --accent: #c9a84c; --accent2: #7eb8d4;
+    --accent3: #6fcf97; --accent-red: #eb5757;
+    --text: #e8e6e0; --muted: #7a8099; --nps: #7eb8d4; --ups: #c9a84c;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; overflow-x:hidden; }
+  body::before { content:''; position:fixed; top:-30%; right:-20%; width:700px; height:700px; background:radial-gradient(circle,rgba(201,168,76,.05) 0%,transparent 70%); pointer-events:none; z-index:0; }
+  body::after  { content:''; position:fixed; bottom:-20%; left:-10%; width:500px; height:500px; background:radial-gradient(circle,rgba(126,184,212,.04) 0%,transparent 70%); pointer-events:none; z-index:0; }
+  .container { max-width:1200px; margin:0 auto; padding:0 24px; position:relative; z-index:1; }
+  header { padding:48px 0 40px; border-bottom:1px solid var(--border); margin-bottom:48px; }
+  .header-badge { display:inline-flex; align-items:center; gap:8px; background:rgba(201,168,76,.1); border:1px solid rgba(201,168,76,.25); border-radius:100px; padding:5px 14px 5px 10px; font-size:11px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); margin-bottom:20px; }
+  .header-badge span { width:6px; height:6px; border-radius:50%; background:var(--accent); display:block; animation:pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+  h1 { font-family:'Playfair Display',serif; font-size:clamp(28px,4vw,48px); font-weight:900; line-height:1.1; letter-spacing:-.02em; color:var(--text); margin-bottom:12px; }
+  h1 em { color:var(--accent); font-style:normal; }
+  .subtitle { color:var(--muted); font-size:15px; font-weight:300; max-width:560px; }
+
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:32px; margin-bottom:24px; transition:border-color .2s; }
+  .card:hover { border-color:rgba(201,168,76,.2); }
+  .card-title { font-family:'Playfair Display',serif; font-size:18px; font-weight:700; color:var(--text); margin-bottom:6px; display:flex; align-items:center; gap:10px; }
+  .card-title .icon { width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:15px; background:rgba(201,168,76,.1); border:1px solid rgba(201,168,76,.2); }
+  .card-desc { font-size:13px; color:var(--muted); margin-bottom:28px; }
+
+  .form-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:20px; }
+  .form-grid.cols-3 { grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); }
+  .field { display:flex; flex-direction:column; gap:7px; }
+  .field label { font-size:11.5px; font-weight:600; text-transform:uppercase; letter-spacing:.07em; color:var(--muted); }
+  .field input, .field select { background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:12px 16px; font-family:'DM Sans',sans-serif; font-size:14px; color:var(--text); width:100%; outline:none; transition:all .2s; -webkit-appearance:none; }
+  .field input:focus,.field select:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(201,168,76,.1); }
+  .field input[readonly] { color:var(--accent); font-family:'DM Mono',monospace; font-size:13px; cursor:not-allowed; opacity:.8; }
+  .field-hint { font-size:11px; color:var(--muted); margin-top:3px; }
+
+  .calc-btn { width:100%; padding:16px 32px; background:var(--accent); color:#0d0f14; border:none; border-radius:12px; font-family:'DM Sans',sans-serif; font-size:16px; font-weight:700; cursor:pointer; transition:all .2s; letter-spacing:.02em; margin-top:8px; }
+  .calc-btn:hover { background:#dbb94f; transform:translateY(-1px); box-shadow:0 8px 24px rgba(201,168,76,.25); }
+  .calc-btn:active { transform:translateY(0); }
+
+  #results { display:none; animation:fadeSlide .5s ease both; }
+  @keyframes fadeSlide { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+  .results-header { text-align:center; padding:40px 0 32px; }
+  .results-header h2 { font-family:'Playfair Display',serif; font-size:32px; font-weight:700; margin-bottom:8px; }
+
+  .summary-chips { display:flex; flex-wrap:wrap; gap:12px; justify-content:center; margin-bottom:40px; }
+  .chip { background:var(--surface); border:1px solid var(--border); border-radius:100px; padding:8px 18px; font-size:13px; color:var(--muted); }
+  .chip strong { color:var(--text); font-weight:600; }
+
+  .compare-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:32px; }
+  @media(max-width:680px){.compare-grid{grid-template-columns:1fr}}
+  .scheme-card { border-radius:16px; padding:28px; position:relative; overflow:hidden; }
+  .scheme-card.nps { background:linear-gradient(135deg,rgba(126,184,212,.08) 0%,rgba(126,184,212,.03) 100%); border:1px solid rgba(126,184,212,.25); }
+  .scheme-card.ups { background:linear-gradient(135deg,rgba(201,168,76,.08) 0%,rgba(201,168,76,.03) 100%); border:1px solid rgba(201,168,76,.25); }
+  .scheme-label { font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; margin-bottom:8px; }
+  .scheme-card.nps .scheme-label { color:var(--nps); }
+  .scheme-card.ups .scheme-label { color:var(--ups); }
+  .scheme-name { font-family:'Playfair Display',serif; font-size:20px; font-weight:700; margin-bottom:20px; }
+  .metric { margin-bottom:16px; padding-bottom:16px; border-bottom:1px solid var(--border); }
+  .metric:last-child { border-bottom:none; margin-bottom:0; padding-bottom:0; }
+  .metric-label { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; margin-bottom:4px; }
+  .metric-value { font-family:'DM Mono',monospace; font-size:22px; font-weight:500; color:var(--text); }
+  .metric-value.highlight-nps { color:var(--nps); }
+  .metric-value.highlight-ups { color:var(--ups); }
+  .metric-sub { font-size:12px; color:var(--muted); margin-top:3px; }
+  .pv-badge { display:inline-flex; align-items:center; gap:5px; background:rgba(111,207,151,.1); border:1px solid rgba(111,207,151,.2); border-radius:6px; padding:3px 10px; margin-top:6px; font-size:11.5px; color:var(--accent3); font-family:'DM Mono',monospace; font-weight:500; }
+  .pv-badge .pv-lbl { font-family:'DM Sans',sans-serif; font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:rgba(111,207,151,.7); margin-right:2px; }
+
+  .winner-banner { background:linear-gradient(135deg,rgba(111,207,151,.1),rgba(111,207,151,.04)); border:1px solid rgba(111,207,151,.25); border-radius:12px; padding:20px 24px; display:flex; align-items:center; gap:16px; margin-bottom:32px; }
+  .winner-icon { font-size:28px; }
+  .winner-text h3 { font-size:15px; font-weight:600; color:var(--accent3); margin-bottom:3px; }
+  .winner-text p { font-size:13px; color:var(--muted); }
+
+  .section-heading { font-family:'Playfair Display',serif; font-size:20px; font-weight:700; margin-bottom:20px; padding-bottom:12px; border-bottom:1px solid var(--border); }
+
+  /* Chart tabs */
+  .chart-tabs { display:flex; gap:8px; margin-bottom:24px; flex-wrap:wrap; }
+  .chart-tab { padding:8px 18px; border-radius:100px; border:1px solid var(--border); background:transparent; color:var(--muted); font-family:'DM Sans',sans-serif; font-size:13px; font-weight:500; cursor:pointer; transition:all .2s; }
+  .chart-tab.active { background:var(--accent); color:#0d0f14; border-color:var(--accent); font-weight:700; }
+  .chart-wrap { position:relative; background:var(--surface2); border:1px solid var(--border); border-radius:12px; padding:24px; }
+  .chart-panel { display:none; }
+  .chart-panel.active { display:block; }
+
+  /* Timeline */
+  .timeline { position:relative; padding-left:32px; }
+  .timeline::before { content:''; position:absolute; left:10px; top:0; bottom:0; width:1px; background:linear-gradient(to bottom,var(--accent),var(--border) 80%,transparent); }
+  .timeline-item { position:relative; margin-bottom:24px; padding:16px 20px; background:var(--surface); border:1px solid var(--border); border-radius:12px; transition:border-color .2s; }
+  .timeline-item:hover { border-color:rgba(201,168,76,.2); }
+  .timeline-item::before { content:''; position:absolute; left:-28px; top:50%; transform:translateY(-50%); width:10px; height:10px; border-radius:50%; background:var(--accent); border:2px solid var(--bg); box-shadow:0 0 0 2px var(--accent); }
+  .timeline-year { font-family:'DM Mono',monospace; font-size:11px; color:var(--accent); font-weight:500; margin-bottom:4px; }
+  .timeline-event { font-size:14px; font-weight:600; color:var(--text); margin-bottom:2px; }
+  .timeline-detail { font-size:12px; color:var(--muted); }
+
+  /* Table */
+  .table-wrap { overflow-x:auto; }
+  table { width:100%; border-collapse:collapse; font-size:13px; }
+  thead tr { border-bottom:1px solid var(--border); }
+  th { text-align:left; padding:10px 14px; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.07em; color:var(--muted); }
+  td { padding:12px 14px; border-bottom:1px solid rgba(37,42,54,.5); color:var(--text); vertical-align:middle; }
+  tbody tr:hover { background:rgba(201,168,76,.03); }
+  tbody tr:last-child td { border-bottom:none; }
+  .tag { display:inline-block; padding:2px 10px; border-radius:100px; font-size:11px; font-weight:600; }
+  .tag.promo { background:rgba(201,168,76,.15); color:var(--accent); }
+  .tag.paycomm { background:rgba(126,184,212,.15); color:var(--nps); }
+  .tag.retire { background:rgba(235,87,87,.15); color:var(--accent-red); }
+  .tag.join { background:rgba(111,207,151,.15); color:var(--accent3); }
+  .mono { font-family:'DM Mono',monospace; }
+
+  /* Recs */
+  .rec-card { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:28px 32px; margin-bottom:24px; }
+  .rec-list { list-style:none; margin-top:16px; }
+  .rec-list li { padding:10px 0; border-bottom:1px solid var(--border); font-size:13.5px; color:var(--muted); display:flex; align-items:flex-start; gap:10px; }
+  .rec-list li:last-child { border-bottom:none; }
+  .rec-list li::before { content:'→'; color:var(--accent); font-weight:700; flex-shrink:0; margin-top:1px; }
+  .disclaimer { background:rgba(126,184,212,.05); border:1px solid rgba(126,184,212,.15); border-radius:10px; padding:16px 20px; font-size:12px; color:var(--muted); line-height:1.7; margin-top:24px; }
+  .reset-btn { display:block; margin:32px auto 0; padding:12px 32px; background:transparent; border:1px solid var(--border); border-radius:10px; color:var(--muted); font-family:'DM Sans',sans-serif; font-size:14px; cursor:pointer; transition:all .2s; }
+  .reset-btn:hover { border-color:var(--accent); color:var(--accent); }
+
+  /* Footer */
+  footer { border-top:1px solid var(--border); padding:32px 0 28px; margin-top:56px; text-align:center; }
+  .footer-inner { display:inline-flex; flex-direction:column; align-items:center; gap:12px; }
+  .footer-badge { display:inline-flex; align-items:center; gap:12px; background:rgba(201,168,76,.07); border:1px solid rgba(201,168,76,.2); border-radius:100px; padding:12px 28px; }
+  .footer-badge .cap { font-size:20px; }
+  .footer-name { font-family:'Playfair Display',serif; font-size:16px; font-weight:700; color:var(--accent); }
+  .footer-inst { font-size:13px; color:var(--muted); margin-top:2px; letter-spacing:.03em; }
+  .footer-divider { width:32px; height:1px; background:var(--border); margin:4px auto; }
+  .footer-copy { font-size:11px; color:var(--muted); letter-spacing:.07em; text-transform:uppercase; }
+
+  @media(max-width:640px){.card{padding:20px 16px}.form-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="header-badge"><span></span>UGC 7th Pay Commission · NPS vs UPS</div>
+    <h1>Higher Education<br><em>Pension Calculator</em></h1>
+    <p class="subtitle">Comprehensive retirement planning for university lecturers, assistant professors, associate professors &amp; professors under UGC pay scales.</p>
+  </header>
+
+  <!-- ══════════════════════ INPUT FORM ══════════════════════ -->
+  <div id="form-section">
+
+    <div class="card">
+      <div class="card-title"><span class="icon">👤</span> Personal &amp; Service Details</div>
+      <p class="card-desc">Enter your basic information to compute service duration and retirement timeline.</p>
+      <div class="form-grid">
+        <div class="field">
+          <label>Date of Joining Service</label>
+          <input type="date" id="joiningDate" onchange="computeDerived()">
+        </div>
+        <div class="field">
+          <label>Date of Birth</label>
+          <input type="date" id="dob" onchange="computeDerived()">
+        </div>
+        <div class="field">
+          <label>Retirement Date</label>
+          <input type="text" id="retirementDate" readonly placeholder="Auto-computed (age 60)">
+          <span class="field-hint">Retirement at age 60 as per UGC norms</span>
+        </div>
+        <div class="field">
+          <label>Total Service (Years)</label>
+          <input type="text" id="totalService" readonly placeholder="Auto-computed">
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">💰</span> Pay Scale Configuration</div>
+      <p class="card-desc">Starting pay ₹57,700 (Level 10). Both promotion years are counted from the date of joining.</p>
+      <div class="form-grid">
+        <div class="field">
+          <label>Starting Basic Pay (₹)</label>
+          <input type="number" id="startingBasic" value="57700" min="1000">
+          <span class="field-hint">Level 10 – Assistant Professor</span>
+        </div>
+        <div class="field">
+          <label>Assoc. Prof. After (Years from Joining)</label>
+          <input type="number" id="assocPromoYrs" value="12" min="1" max="35">
+          <span class="field-hint">Default 12 yrs · Editable</span>
+        </div>
+        <div class="field">
+          <label>Professor After (Years from Joining)</label>
+          <input type="number" id="profPromoYrs" value="15" min="1" max="40">
+          <span class="field-hint">Default 15 yrs from joining · Editable</span>
+        </div>
+      </div>
+      <div style="margin-top:20px;">
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:16px;">
+          <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:12px;">UGC 7th CPC Pay Matrix — Designation Baselines</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;text-align:center;">
+            <div><div style="color:var(--muted);font-size:11px;margin-bottom:6px;">Asst. Professor</div><div style="font-family:'DM Mono',monospace;color:var(--accent3);font-size:15px;">₹57,700</div><div style="font-size:11px;color:var(--muted);margin-top:3px;">Level 10</div></div>
+            <div><div style="color:var(--muted);font-size:11px;margin-bottom:6px;">Assoc. Professor</div><div style="font-family:'DM Mono',monospace;color:var(--accent);font-size:15px;">₹1,31,400</div><div style="font-size:11px;color:var(--muted);margin-top:3px;">Level 13A</div></div>
+            <div><div style="color:var(--muted);font-size:11px;margin-bottom:6px;">Professor</div><div style="font-family:'DM Mono',monospace;color:var(--nps);font-size:15px;">₹1,44,200</div><div style="font-size:11px;color:var(--muted);margin-top:3px;">Level 14</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">📋</span> Future Pay Commission Multipliers</div>
+      <p class="card-desc">Estimated fitment factors for future pay commissions (8th CPC 2026, 9th CPC 2036, etc.).</p>
+      <div class="form-grid cols-3">
+        <div class="field"><label>8th CPC Year</label><input type="number" id="cpc8year" value="2026"></div>
+        <div class="field"><label>8th CPC Fitment Factor</label><input type="number" id="cpc8factor" value="1.92" step="0.01"><span class="field-hint">Expected ~1.92×</span></div>
+        <div class="field"><label>9th CPC Year</label><input type="number" id="cpc9year" value="2036"></div>
+        <div class="field"><label>9th CPC Fitment Factor</label><input type="number" id="cpc9factor" value="1.92" step="0.01"></div>
+        <div class="field"><label>10th CPC Year</label><input type="number" id="cpc10year" value="2046"></div>
+        <div class="field"><label>10th CPC Fitment Factor</label><input type="number" id="cpc10factor" value="1.92" step="0.01"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">📈</span> NPS Configuration</div>
+      <p class="card-desc">Enter current NPS corpus and contribution parameters to compare NPS vs UPS.</p>
+      <div class="form-grid">
+        <div class="field"><label>Present NPS Corpus (₹)</label><input type="number" id="npsCorpus" value="0" min="0"><span class="field-hint">Current accumulated corpus</span></div>
+        <div class="field"><label>Expected NPS Return (% p.a.)</label><input type="number" id="npsReturn" value="9" step="0.1"><span class="field-hint">Historical avg ~9–10%</span></div>
+        <div class="field"><label>Employee Contribution (%)</label><input type="number" id="npsEmpPct" value="10"><span class="field-hint">10% of Basic + DA</span></div>
+        <div class="field"><label>Employer Contribution (%)</label><input type="number" id="npsEmpRPct" value="14"><span class="field-hint">14% of Basic (Govt.)</span></div>
+        <div class="field"><label>Annuity Rate (% p.a.)</label><input type="number" id="annuityRate" value="6" step="0.1"><span class="field-hint">Corpus → pension conversion</span></div>
+        <div class="field"><label>Annuity Purchase %</label><input type="number" id="annuityPct" value="40" min="40" max="100"><span class="field-hint">Min 40% must be annuitised</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">📊</span> Dearness Allowance &amp; Assumptions</div>
+      <p class="card-desc">DA growth rate used between pay commissions for gross pay &amp; pension calculations.</p>
+      <div class="form-grid">
+        <div class="field"><label>DA Growth Rate (% per year)</label><input type="number" id="daGrowth" value="4" step="0.5" onchange="computeDerived()"><span class="field-hint">~2 hikes/year @ 2% each</span></div>
+        <div class="field"><label>Estimated DA at Retirement (%)</label><input type="text" id="daAtRetirement" readonly placeholder="Auto-computed"></div>
+        <div class="field"><label>Inflation Rate for PV (% p.a.)</label><input type="number" id="inflationRate" value="6" step="0.5" min="1" max="20"><span class="field-hint">Used to discount future values to today's money</span></div>
+      </div>
+    </div>
+
+    <button class="calc-btn" onclick="calculate()">⚡ Calculate Pension Benefits</button>
+  </div>
+
+  <!-- ══════════════════════ RESULTS ══════════════════════ -->
+  <div id="results">
+    <div class="results-header">
+      <h2>Pension Analysis Report</h2>
+      <p style="color:var(--muted);font-size:14px;">Based on UGC Pay Commission &amp; projected career trajectory</p>
+    </div>
+
+    <div class="summary-chips" id="summaryChips"></div>
+
+    <div class="winner-banner">
+      <div class="winner-icon">🏆</div>
+      <div class="winner-text">
+        <h3 id="winnerText"></h3>
+        <p id="winnerSub"></p>
+      </div>
+    </div>
+
+    <!-- PV Insight Banner -->
+    <div id="pvInsightBanner" style="background:linear-gradient(135deg,rgba(111,207,151,.07),rgba(111,207,151,.02));border:1px solid rgba(111,207,151,.2);border-radius:14px;padding:20px 24px;margin-bottom:24px;display:none;">
+      <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent3);margin-bottom:10px;">💡 Present Value Decoder — What Future Money Means in Today's Rupees</div>
+      <div id="pvInsightText" style="font-size:13.5px;color:var(--muted);line-height:1.8;"></div>
+    </div>
+
+    <!-- Scheme Cards -->
+    <div class="compare-grid">
+      <div class="scheme-card nps">
+        <div class="scheme-label">National Pension System</div>
+        <div class="scheme-name">NPS Benefit</div>
+        <div class="metric"><div class="metric-label">Projected Total Corpus</div><div class="metric-value highlight-nps" id="npsTotalCorpus">—</div><div class="metric-sub">At retirement</div><div class="pv-badge"><span class="pv-lbl">PV Today →</span><span id="pvNpsCorpus">—</span></div></div>
+        <div class="metric"><div class="metric-label">Lump Sum (60% withdrawal)</div><div class="metric-value" id="npsLumpsum">—</div><div class="pv-badge"><span class="pv-lbl">PV Today →</span><span id="pvNpsLumpsum">—</span></div></div>
+        <div class="metric"><div class="metric-label">Monthly Pension</div><div class="metric-value highlight-nps" id="npsMonthlyPension">—</div><div class="metric-sub" id="npsAnnuityNote">—</div><div class="pv-badge"><span class="pv-lbl">PV Today →</span><span id="pvNpsPension">—</span>/mo</div></div>
+        <div class="metric"><div class="metric-label">Gratuity</div><div class="metric-value" id="npsGratuity">—</div><div class="metric-sub">Max ₹20 lakh (7th CPC)</div><div class="pv-badge"><span class="pv-lbl">PV Today →</span><span id="pvNpsGratuity">—</span></div></div>
+      </div>
+      <div class="scheme-card ups">
+        <div class="scheme-label">Unified Pension Scheme</div>
+        <div class="scheme-name">UPS Benefit</div>
+        <div class="metric"><div class="metric-label">Monthly Pension</div><div class="metric-value highlight-ups" id="upsMonthlyPension">—</div><div class="metric-sub">50% of last 12-month avg basic</div><div class="pv-badge"><span class="pv-lbl">PV Today →</span><span id="pvUpsPension">—</span>/mo</div></div>
+        <div class="metric"><div class="metric-label">Lump Sum at Retirement</div><div class="metric-value" id="upsLumpsum">—</div><div class="metric-sub">1/10 of (Basic+DA) per 6m block</div><div class="pv-badge"><span class="pv-lbl">PV Today →</span><span id="pvUpsLumpsum">—</span></div></div>
+        <div class="metric"><div class="metric-label">Gratuity</div><div class="metric-value" id="upsGratuity">—</div><div class="metric-sub">15/26 × Basic × Service (capped)</div><div class="pv-badge"><span class="pv-lbl">PV Today →</span><span id="pvUpsGratuity">—</span></div></div>
+        <div class="metric"><div class="metric-label">DA-linked Inflation Protection</div><div class="metric-value" style="font-size:16px;color:var(--accent3);">✓ Yes</div><div class="metric-sub">Pension rises with DA revisions</div></div>
+      </div>
+    </div>
+
+    <!-- ══ CHARTS ══ -->
+    <div class="card">
+      <div class="section-heading">📊 Visual Comparison</div>
+      <div class="chart-tabs">
+        <button class="chart-tab active" onclick="switchChart(event,'monthly')">Monthly Pension</button>
+        <button class="chart-tab" onclick="switchChart(event,'lumpsum')">Lump Sum &amp; Corpus</button>
+        <button class="chart-tab" onclick="switchChart(event,'paygrowth')">Pay Growth</button>
+        <button class="chart-tab" onclick="switchChart(event,'cumulative')">Cumulative (20 yrs)</button>
+        <button class="chart-tab" onclick="switchChart(event,'pvcompare')">Nominal vs Real Value</button>
+      </div>
+      <div class="chart-panel active" id="panel-monthly">
+        <div class="chart-wrap" style="height:320px;"><canvas id="chartMonthly"></canvas></div>
+      </div>
+      <div class="chart-panel" id="panel-lumpsum">
+        <div class="chart-wrap" style="height:320px;"><canvas id="chartLumpsum"></canvas></div>
+      </div>
+      <div class="chart-panel" id="panel-paygrowth">
+        <div class="chart-wrap" style="height:320px;"><canvas id="chartPaygrowth"></canvas></div>
+      </div>
+      <div class="chart-panel" id="panel-cumulative">
+        <div class="chart-wrap" style="height:320px;"><canvas id="chartCumulative"></canvas></div>
+        <p style="font-size:12px;color:var(--muted);margin-top:10px;text-align:center;">NPS pension remains fixed; UPS pension grows annually with DA hikes.</p>
+      </div>
+      <div class="chart-panel" id="panel-pvcompare">
+        <div class="chart-wrap" style="height:320px;"><canvas id="chartPvcompare"></canvas></div>
+        <p style="font-size:12px;color:var(--muted);margin-top:10px;text-align:center;">Nominal = future rupee amount · Real (PV) = equivalent purchasing power in today's rupees · Inflation-discounted using your entered rate.</p>
+      </div>
+    </div>
+
+    <!-- Timeline -->
+    <div class="card">
+      <div class="section-heading">Career &amp; Pay Timeline</div>
+      <div class="timeline" id="careerTimeline"></div>
+    </div>
+
+    <!-- Pay Table -->
+    <div class="card">
+      <div class="section-heading">Pay Progression Details</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Year</th><th>Event</th><th>Designation</th><th>Basic Pay (₹)</th><th>DA %</th><th>Gross Pay (₹)</th></tr></thead>
+          <tbody id="payTable"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Recommendations -->
+    <div class="rec-card">
+      <div class="section-heading">Key Insights &amp; Recommendations</div>
+      <ul class="rec-list" id="recommendations"></ul>
+    </div>
+
+    <div class="disclaimer">⚠️ <strong>Disclaimer:</strong> Projections are based on assumptions about future pay commissions, DA rates, and NPS returns. Actual benefits may vary. Future CPC fitment factors are estimated, not officially announced. Professor promotion is applied after completing specified years from joining, per UGC CAS norms. NPS corpus is market-linked. UPS availability depends on institution adoption. Consult your institution's finance cell and a certified financial advisor for official figures.</div>
+
+    <button class="reset-btn" onclick="resetForm()">← Recalculate</button>
+  </div>
+
+</div><!-- /container -->
+
+<!-- ══════════════════════ FOOTER ══════════════════════ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-badge">
+      <span class="cap">🎓</span>
+      <div>
+        <div class="footer-name">Dr. Swapnil Mishra</div>
+        <div class="footer-inst">GTPC</div>
+      </div>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-copy">Higher Education Pension Calculator · UGC Pay Commission Reference Tool · 2025</div>
+  </div>
+</footer>
+
+<script>
+const UGC_PAY = { asst: 57700, assoc: 131400, prof: 144200 };
+const INCR = 0.03;
+let charts = {};
+
+function fmt(n) {
+  if (n >= 10000000) return '₹' + (n/10000000).toFixed(2) + ' Cr';
+  if (n >= 100000)   return '₹' + (n/100000).toFixed(2) + ' L';
+  return '₹' + Math.round(n).toLocaleString('en-IN');
+}
+function fmtFull(n) { return '₹' + Math.round(n).toLocaleString('en-IN'); }
+
+function computeDerived() {
+  const dob = document.getElementById('dob').value;
+  const joining = document.getElementById('joiningDate').value;
+  if (!dob) return;
+  const dobD = new Date(dob);
+  const retD = new Date(dobD); retD.setFullYear(retD.getFullYear() + 60);
+  document.getElementById('retirementDate').value = retD.toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'});
+  if (joining) {
+    const yrs = (retD - new Date(joining)) / (1000*60*60*24*365.25);
+    document.getElementById('totalService').value = yrs.toFixed(1) + ' years';
+    const moreYrs = Math.max(0,(retD - new Date())/(1000*60*60*24*365.25));
+    const dg = parseFloat(document.getElementById('daGrowth').value||4);
+    document.getElementById('daAtRetirement').value = Math.round(55 + moreYrs*dg) + '%';
+  }
+}
+
+function switchChart(e, id) {
+  document.querySelectorAll('.chart-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.chart-panel').forEach(p=>p.classList.remove('active'));
+  e.currentTarget.classList.add('active');
+  document.getElementById('panel-'+id).classList.add('active');
+}
+
+function mkChart(id, type, data, opts) {
+  if (charts[id]) { charts[id].destroy(); }
+  charts[id] = new Chart(document.getElementById(id), { type, data, options: opts });
+}
+
+const BASE_OPTS = (yLabel) => ({
+  responsive: true, maintainAspectRatio: false,
+  plugins: {
+    legend: { labels: { color:'#7a8099', font:{family:'DM Sans',size:12}, boxWidth:14, padding:20 } },
+    tooltip: {
+      backgroundColor:'#1a1e27', borderColor:'#252a36', borderWidth:1,
+      titleColor:'#e8e6e0', bodyColor:'#7a8099',
+      titleFont:{family:'DM Mono',size:12}, bodyFont:{family:'DM Sans',size:12},
+      callbacks:{ label: ctx => ' ' + ctx.dataset.label + ': ₹' + Math.round(ctx.parsed.y).toLocaleString('en-IN') }
+    }
+  },
+  scales: {
+    x: { grid:{color:'rgba(37,42,54,.6)'}, ticks:{color:'#7a8099',font:{family:'DM Mono',size:11}} },
+    y: {
+      grid:{color:'rgba(37,42,54,.6)'},
+      ticks:{ color:'#7a8099', font:{family:'DM Mono',size:11},
+        callback: v => v>=100000 ? '₹'+(v/100000).toFixed(0)+'L' : '₹'+v.toLocaleString('en-IN') },
+      title: yLabel ? {display:true, text:yLabel, color:'#7a8099', font:{family:'DM Sans',size:12}} : {display:false}
+    }
+  }
+});
+
+function calculate() {
+  const jv = document.getElementById('joiningDate').value;
+  const dv = document.getElementById('dob').value;
+  if (!jv || !dv) { alert('Please enter Joining Date and Date of Birth.'); return; }
+
+  const joinD = new Date(jv);
+  const dobD  = new Date(dv);
+  const retD  = new Date(dobD); retD.setFullYear(retD.getFullYear()+60);
+
+  const totalYrs = (retD-joinD)/(1000*60*60*24*365.25);
+  const joinYear = joinD.getFullYear();
+  const retYear  = retD.getFullYear();
+  const todayY   = new Date().getFullYear();
+
+  const startBasic  = parseFloat(document.getElementById('startingBasic').value);
+  // ── CORRECTED: both from joining ──
+  const assocYrs    = parseFloat(document.getElementById('assocPromoYrs').value); // years from joining
+  const profYrs     = parseFloat(document.getElementById('profPromoYrs').value);  // years from joining
+
+  const cpc8y  = parseInt(document.getElementById('cpc8year').value);
+  const cpc8f  = parseFloat(document.getElementById('cpc8factor').value);
+  const cpc9y  = parseInt(document.getElementById('cpc9year').value);
+  const cpc9f  = parseFloat(document.getElementById('cpc9factor').value);
+  const cpc10y = parseInt(document.getElementById('cpc10year').value);
+  const cpc10f = parseFloat(document.getElementById('cpc10factor').value);
+  const daG    = parseFloat(document.getElementById('daGrowth').value);
+
+  const npsNow    = parseFloat(document.getElementById('npsCorpus').value)||0;
+  const npsRet    = parseFloat(document.getElementById('npsReturn').value)/100;
+  const empPct    = parseFloat(document.getElementById('npsEmpPct').value)/100;
+  const empRPct   = parseFloat(document.getElementById('npsEmpRPct').value)/100;
+  const annRate   = parseFloat(document.getElementById('annuityRate').value)/100;
+  const annPct    = parseFloat(document.getElementById('annuityPct').value)/100;
+  const inflation = parseFloat(document.getElementById('inflationRate').value)/100;
+
+  // Promotion dates (from joining)
+  const assocDate = new Date(joinD); assocDate.setFullYear(assocDate.getFullYear()+Math.floor(assocYrs));
+  const profDate  = new Date(joinD); profDate.setFullYear(profDate.getFullYear()+Math.floor(profYrs));
+
+  const willAssoc = assocDate < retD;
+  // ── Professor: only if profYrs > assocYrs AND within service ──
+  const willProf  = profDate < retD && profYrs > assocYrs;
+
+  const cpcs = [
+    {year:cpc8y, factor:cpc8f, name:'8th Pay Commission'},
+    {year:cpc9y, factor:cpc9f, name:'9th Pay Commission'},
+    {year:cpc10y,factor:cpc10f,name:'10th Pay Commission'}
+  ].filter(c=>c.year>=joinYear && c.year<=retYear);
+
+  function daY(y) { return Math.round(55 + Math.max(0,y-todayY)*daG); }
+
+  // ── Simulate year-by-year ──
+  let payHistory=[], curDesig='Assistant Professor', curBasic=startBasic, cpcFactor=1;
+  let dAssoc=false, dProf=false;
+  const usedCPCs=new Set();
+
+  for (let y=joinYear; y<=retYear; y++) {
+    const svc = y-joinYear;
+    let evType='normal', evLabel='';
+
+    // Assoc Prof promotion (after assocYrs from joining)
+    if (!dAssoc && willAssoc && svc >= assocYrs) {
+      dAssoc=true; curDesig='Associate Professor';
+      curBasic = UGC_PAY.assoc * cpcFactor;
+      evType='promo'; evLabel='Promoted: Associate Professor';
+    }
+    // Professor promotion (after profYrs from joining — CORRECTED)
+    if (!dProf && willProf && svc >= profYrs) {
+      dProf=true; curDesig='Professor';
+      curBasic = UGC_PAY.prof * cpcFactor;
+      evType='promo'; evLabel='Promoted: Professor';
+    }
+
+    // Pay Commission
+    cpcs.forEach(c=>{
+      if (y===c.year && !usedCPCs.has(c.year)) {
+        usedCPCs.add(c.year);
+        cpcFactor *= c.factor;
+        curBasic  *= c.factor;
+        if (evType==='normal'){evType='cpc';evLabel=c.name;}
+      }
+    });
+
+    // Annual increment
+    if (evType==='normal' && svc>0) curBasic *= (1+INCR);
+
+    const da    = daY(y);
+    const gross = curBasic*(1+da/100);
+    const notable = evType!=='normal'||y===joinYear||y===retYear||y%5===0;
+    if (notable) {
+      payHistory.push({
+        year:y, event:evType,
+        label: evLabel||(y===retYear?'Retirement':y===joinYear?'Joining':'Service Year'),
+        designation:curDesig, basic:Math.round(curBasic), da, gross:Math.round(gross)
+      });
+    }
+  }
+
+  const retRow  = payHistory[payHistory.length-1];
+  const retBasic= retRow.basic;
+  const retDA   = retRow.da;
+
+  // ── UPS ──
+  const upsPension  = retBasic * 0.5;
+  const sixBlocks   = Math.floor(totalYrs*2);
+  const upsLumpsum  = (1/10)*retBasic*(1+retDA/100)*sixBlocks;
+  const upsGratuity = Math.min((15/26)*retBasic*Math.min(totalYrs,33), 2000000);
+
+  // ── NPS ──
+  const now  = new Date();
+  const yToR = Math.max(0,(retD-now)/(1000*60*60*24*365.25));
+  let corpus = npsNow * Math.pow(1+npsRet, yToR);
+  const avgBasic = (willProf?UGC_PAY.prof:willAssoc?UGC_PAY.assoc:UGC_PAY.asst) * Math.pow(cpcFactor,0.5);
+  const mContrib = avgBasic*(empPct+empRPct);
+  const mRet     = npsRet/12;
+  if (mRet>0 && yToR>0) {
+    const months = Math.round(yToR*12);
+    corpus += mContrib*(Math.pow(1+mRet,months)-1)/mRet;
+  } else { corpus += mContrib*yToR*12; }
+
+  const npsTotalCorpus    = corpus;
+  const npsAnnuityCorpus  = corpus*annPct;
+  const npsLumpsum        = corpus*(1-annPct);
+  const npsMonthlyPension = (npsAnnuityCorpus*annRate)/12;
+  const npsGratuity       = Math.min((15/26)*retBasic*Math.min(totalYrs,33),2000000);
+
+  // Winner
+  const npsScore = npsMonthlyPension + npsLumpsum/120;
+  const upsScore = upsPension + (upsLumpsum+upsGratuity)/120;
+  const winner = upsScore>npsScore?'ups':'nps';
+
+  // ── Show results ──
+  document.getElementById('form-section').style.display='none';
+  document.getElementById('results').style.display='block';
+  document.getElementById('results').scrollIntoView({behavior:'smooth'});
+
+  document.getElementById('summaryChips').innerHTML=[
+    `<div class="chip">Service: <strong>${totalYrs.toFixed(1)} yrs</strong></div>`,
+    `<div class="chip">Retires: <strong>${retD.toLocaleDateString('en-IN',{month:'short',year:'numeric'})}</strong></div>`,
+    `<div class="chip">Last Basic: <strong>${fmt(retBasic)}</strong></div>`,
+    `<div class="chip">DA at Retirement: <strong>${retDA}%</strong></div>`,
+    `<div class="chip">Designation: <strong>${retRow.designation}</strong></div>`,
+    `<div class="chip">CPC Multiplier: <strong>${cpcFactor.toFixed(2)}×</strong></div>`,
+  ].join('');
+
+  document.getElementById('winnerText').textContent = winner==='ups'
+    ? 'UPS Appears More Beneficial for You'
+    : 'NPS May Yield Higher Overall Returns';
+  document.getElementById('winnerSub').textContent = winner==='ups'
+    ? `UPS gives ${fmt(upsPension)}/month vs NPS ${fmt(npsMonthlyPension)}/month, with DA-linked growth.`
+    : `NPS corpus ${fmt(npsTotalCorpus)} yields ${fmt(npsMonthlyPension)}/month + ${fmt(npsLumpsum)} lump sum.`;
+
+  document.getElementById('npsTotalCorpus').textContent    = fmt(npsTotalCorpus);
+  document.getElementById('npsLumpsum').textContent        = fmt(npsLumpsum);
+  document.getElementById('npsMonthlyPension').textContent = `₹${Math.round(npsMonthlyPension).toLocaleString('en-IN')}/mo`;
+  document.getElementById('npsAnnuityNote').textContent    = `${Math.round(annPct*100)}% corpus (${fmt(npsAnnuityCorpus)}) annuitised @ ${Math.round(annRate*100)}%`;
+  document.getElementById('npsGratuity').textContent       = fmt(npsGratuity);
+  document.getElementById('upsMonthlyPension').textContent = `₹${Math.round(upsPension).toLocaleString('en-IN')}/mo`;
+  document.getElementById('upsLumpsum').textContent        = fmt(upsLumpsum);
+  document.getElementById('upsGratuity').textContent       = fmt(upsGratuity);
+
+  // ── PRESENT VALUE CALCULATIONS ──
+  // PV discount factor: 1 / (1 + inflation)^yearsToRetirement
+  const pvFactor = 1 / Math.pow(1 + inflation, yToR);
+
+  const pvNpsCorpus   = npsTotalCorpus   * pvFactor;
+  const pvNpsLumpsum  = npsLumpsum       * pvFactor;
+  const pvNpsPension  = npsMonthlyPension* pvFactor;
+  const pvNpsGratuity = npsGratuity      * pvFactor;
+  const pvUpsPension  = upsPension       * pvFactor;
+  const pvUpsLumpsum  = upsLumpsum       * pvFactor;
+  const pvUpsGratuity = upsGratuity      * pvFactor;
+
+  document.getElementById('pvNpsCorpus').textContent   = fmt(pvNpsCorpus);
+  document.getElementById('pvNpsLumpsum').textContent  = fmt(pvNpsLumpsum);
+  document.getElementById('pvNpsPension').textContent  = fmt(pvNpsPension);
+  document.getElementById('pvNpsGratuity').textContent = fmt(pvNpsGratuity);
+  document.getElementById('pvUpsPension').textContent  = fmt(pvUpsPension);
+  document.getElementById('pvUpsLumpsum').textContent  = fmt(pvUpsLumpsum);
+  document.getElementById('pvUpsGratuity').textContent = fmt(pvUpsGratuity);
+
+  // PV Insight banner
+  const pvBanner = document.getElementById('pvInsightBanner');
+  pvBanner.style.display = 'block';
+  document.getElementById('pvInsightText').innerHTML =
+    `At <strong style="color:var(--text)">${Math.round(inflation*100)}% annual inflation</strong> over <strong style="color:var(--text)">${yToR.toFixed(1)} years</strong>, ` +
+    `each rupee at retirement is worth only <strong style="color:var(--accent3)">₹${pvFactor.toFixed(3)}</strong> in today's money (discount factor ${pvFactor.toFixed(3)}×).<br>` +
+    `Your NPS corpus of <strong style="color:var(--nps)">${fmt(npsTotalCorpus)}</strong> is equivalent to <strong style="color:var(--accent3)">${fmt(pvNpsCorpus)}</strong> today. ` +
+    `Your UPS pension of <strong style="color:var(--ups)">${fmt(upsPension)}/month</strong> has purchasing power of <strong style="color:var(--accent3)">${fmt(pvUpsPension)}/month</strong> in today's rupees. ` +
+    `<em style="color:var(--muted)">Note: UPS pension is DA-indexed so its real value is protected better over time than NPS fixed annuity.</em>`;
+
+  // ══ RENDER CHARTS ══
+  setTimeout(()=>{
+
+    // 1. Monthly Pension — Grouped Bar
+    mkChart('chartMonthly','bar',{
+      labels:['Monthly Pension Comparison'],
+      datasets:[
+        { label:'NPS Monthly Pension', data:[Math.round(npsMonthlyPension)], backgroundColor:'rgba(126,184,212,.75)', borderColor:'#7eb8d4', borderWidth:2, borderRadius:10 },
+        { label:'UPS Monthly Pension', data:[Math.round(upsPension)], backgroundColor:'rgba(201,168,76,.75)', borderColor:'#c9a84c', borderWidth:2, borderRadius:10 },
+      ]
+    }, BASE_OPTS('Monthly Pension (₹)'));
+
+    // 2. Lump Sum & Corpus — Horizontal Bar
+    mkChart('chartLumpsum','bar',{
+      labels:['NPS Total Corpus','NPS Lump Sum (60%)','NPS Gratuity','UPS Lump Sum','UPS Gratuity'],
+      datasets:[{
+        label:'Amount (₹)',
+        data:[Math.round(npsTotalCorpus),Math.round(npsLumpsum),Math.round(npsGratuity),Math.round(upsLumpsum),Math.round(upsGratuity)],
+        backgroundColor:['rgba(126,184,212,.8)','rgba(126,184,212,.5)','rgba(111,207,151,.6)','rgba(201,168,76,.8)','rgba(201,168,76,.5)'],
+        borderColor:['#7eb8d4','#7eb8d4','#6fcf97','#c9a84c','#c9a84c'],
+        borderWidth:2, borderRadius:8,
+      }]
+    },{
+      ...BASE_OPTS('Amount (₹)'),
+      plugins:{
+        legend:{display:false},
+        tooltip:{
+          backgroundColor:'#1a1e27',borderColor:'#252a36',borderWidth:1,
+          titleColor:'#e8e6e0',bodyColor:'#7a8099',
+          callbacks:{label:ctx=>' ₹'+Math.round(ctx.parsed.y).toLocaleString('en-IN')}
+        }
+      }
+    });
+
+    // 3. Pay Growth — Line
+    const pgL = payHistory.map(r=>r.year);
+    const pgB = payHistory.map(r=>r.basic);
+    const pgG = payHistory.map(r=>r.gross);
+    mkChart('chartPaygrowth','line',{
+      labels:pgL,
+      datasets:[
+        { label:'Basic Pay', data:pgB, borderColor:'#c9a84c', backgroundColor:'rgba(201,168,76,.07)', fill:true, tension:0.35, pointBackgroundColor:'#c9a84c', pointRadius:4, pointHoverRadius:7, borderWidth:2.5 },
+        { label:'Gross Pay (Basic + DA)', data:pgG, borderColor:'#7eb8d4', backgroundColor:'rgba(126,184,212,.06)', fill:true, tension:0.35, pointBackgroundColor:'#7eb8d4', pointRadius:4, pointHoverRadius:7, borderWidth:2.5 },
+      ]
+    }, BASE_OPTS('Pay (₹)'));
+
+    // 4. Cumulative Pension over 20 years
+    const cumLbls = Array.from({length:21},(_,i)=>'Yr '+i);
+    let cNPS=0, cUPS=0, upsMo=upsPension;
+    const dNPS=[0], dUPS=[0];
+    for (let i=1;i<=20;i++){
+      cNPS += npsMonthlyPension*12;
+      cUPS += upsMo*12;
+      upsMo *= (1+daG/100);
+      dNPS.push(Math.round(cNPS));
+      dUPS.push(Math.round(cUPS));
+    }
+    mkChart('chartCumulative','line',{
+      labels:cumLbls,
+      datasets:[
+        { label:'NPS Cumulative', data:dNPS, borderColor:'#7eb8d4', backgroundColor:'rgba(126,184,212,.08)', fill:true, tension:0.3, pointBackgroundColor:'#7eb8d4', pointRadius:3, borderWidth:2.5 },
+        { label:'UPS Cumulative', data:dUPS, borderColor:'#c9a84c', backgroundColor:'rgba(201,168,76,.08)', fill:true, tension:0.3, pointBackgroundColor:'#c9a84c', pointRadius:3, borderWidth:2.5 },
+      ]
+    }, BASE_OPTS('Total Pension Received (₹)'));
+
+    // 5. Nominal vs Real (PV) grouped bar
+    const pvLabels = ['NPS Corpus','NPS Lump Sum','NPS Monthly ×12','NPS Gratuity','UPS Monthly ×12','UPS Lump Sum','UPS Gratuity'];
+    const nominals = [npsTotalCorpus, npsLumpsum, npsMonthlyPension*12, npsGratuity, upsPension*12, upsLumpsum, upsGratuity];
+    const pvs      = [pvNpsCorpus,    pvNpsLumpsum, pvNpsPension*12,    pvNpsGratuity, pvUpsPension*12, pvUpsLumpsum, pvUpsGratuity];
+    mkChart('chartPvcompare','bar',{
+      labels: pvLabels,
+      datasets:[
+        { label:'Nominal (Future ₹)', data:nominals.map(Math.round), backgroundColor:'rgba(126,184,212,.5)', borderColor:'#7eb8d4', borderWidth:2, borderRadius:6 },
+        { label:`Real Value (PV @ ${Math.round(inflation*100)}% inflation)`, data:pvs.map(Math.round), backgroundColor:'rgba(201,168,76,.6)', borderColor:'#c9a84c', borderWidth:2, borderRadius:6 },
+      ]
+    }, {
+      ...BASE_OPTS('Amount (₹)'),
+      plugins: {
+        legend:{ labels:{ color:'#7a8099', font:{family:'DM Sans',size:12}, boxWidth:14, padding:20 } },
+        tooltip:{
+          backgroundColor:'#1a1e27', borderColor:'#252a36', borderWidth:1,
+          titleColor:'#e8e6e0', bodyColor:'#7a8099',
+          titleFont:{family:'DM Mono',size:11}, bodyFont:{family:'DM Sans',size:12},
+          callbacks:{ label: ctx => ' '+ctx.dataset.label+': ₹'+Math.round(ctx.parsed.y).toLocaleString('en-IN') }
+        }
+      }
+    });
+
+  }, 120);
+
+  // ── Timeline ──
+  const tlEv=[
+    {year:joinYear, label:'Joined Service', detail:`Assistant Professor · Basic: ${fmt(startBasic)}`, type:'join'},
+    ...(willAssoc?[{year:assocDate.getFullYear(), label:'Promoted: Associate Professor', detail:`After ${assocYrs} years from joining · Level 13A · Base: ${fmt(UGC_PAY.assoc)}`, type:'promo'}]:[]),
+    ...(willProf ?[{year:profDate.getFullYear(),  label:'Promoted: Professor',           detail:`After ${profYrs} years from joining · Level 14 · Base: ${fmt(UGC_PAY.prof)}`,  type:'promo'}]:[]),
+    ...cpcs.filter(c=>c.year<=retYear).map(c=>({year:c.year, label:c.name+' Applied', detail:`Fitment Factor: ${c.factor}× · Pay scales revised upward`, type:'cpc'})),
+    {year:retYear, label:'Retirement', detail:`Last Basic: ${fmt(retBasic)} · ${retRow.designation} · ${totalYrs.toFixed(0)} years of service`, type:'retire'},
+  ].sort((a,b)=>a.year-b.year);
+
+  document.getElementById('careerTimeline').innerHTML=tlEv.map(e=>`
+    <div class="timeline-item">
+      <div class="timeline-year">${e.year}</div>
+      <div class="timeline-event">${e.label}</div>
+      <div class="timeline-detail">${e.detail}</div>
+    </div>`).join('');
+
+  // ── Pay Table ──
+  document.getElementById('payTable').innerHTML=payHistory.map(row=>{
+    let tag='';
+    if(row.event==='join')   tag=`<span class="tag join">Joining</span>`;
+    else if(row.event==='promo') tag=`<span class="tag promo">Promotion</span>`;
+    else if(row.event==='cpc')   tag=`<span class="tag paycomm">Pay Comm.</span>`;
+    else if(row.label==='Retirement') tag=`<span class="tag retire">Retirement</span>`;
+    return `<tr>
+      <td class="mono">${row.year}</td>
+      <td>${row.label} ${tag}</td>
+      <td style="font-size:12px;color:var(--muted)">${row.designation}</td>
+      <td class="mono">${fmtFull(row.basic)}</td>
+      <td class="mono">${row.da}%</td>
+      <td class="mono" style="color:var(--accent)">${fmtFull(row.gross)}</td>
+    </tr>`;
+  }).join('');
+
+  // ── Recommendations ──
+  const recs=[
+    `Final designation at retirement: <strong>${retRow.designation}</strong> with last basic <strong>${fmt(retBasic)}</strong> and gross <strong>${fmt(retRow.gross)}</strong> (including ${retDA}% DA).`,
+    willProf
+      ? `<strong>Professor promotion</strong> applies after <strong>${profYrs} years from joining</strong> (year ${profDate.getFullYear()}), with UGC Level 14 entry basic ₹1,44,200 plus annual increments and CPC revisions.`
+      : `Your service of ${totalYrs.toFixed(0)} years does not reach the ${profYrs}-year threshold for Professor promotion. Consider applying for CAS earlier.`,
+    willAssoc && !willProf
+      ? `You will be promoted to <strong>Associate Professor</strong> after ${assocYrs} years (${assocDate.getFullYear()}), but service ends before reaching Professor designation.`
+      : '',
+    `<strong>UPS Monthly Pension: ${fmt(upsPension)}/month</strong> · <strong>NPS Monthly Pension: ${fmt(npsMonthlyPension)}/month</strong>. UPS pension is DA-indexed and grows annually.`,
+    `Cumulative pension over 20 years — UPS: <strong>${fmt(upsPension*12*20*(1+daG/100*10))}</strong> (approx. with DA growth) vs NPS: <strong>${fmt(npsMonthlyPension*12*20)}</strong> (fixed).`,
+    totalYrs>=25
+      ? `✅ With ${totalYrs.toFixed(0)} years you qualify for <strong>full UPS pension</strong> (minimum 25 years required).`
+      : `⚠️ UPS requires minimum 25 years for full pension. Your projected ${totalYrs.toFixed(0)} years may qualify for proportional or minimum ₹10,000/month guarantee.`,
+    `Gratuity (both schemes) ≈ ${fmt(upsGratuity)} — tax-exempt up to ₹20 lakh under current Income Tax rules.`,
+    cpcs.length>0
+      ? `${cpcs.length} Pay Commission(s) within your service period. Total fitment multiplier: <strong>${cpcFactor.toFixed(2)}×</strong> — substantially raises terminal pay and pension base.`
+      : `No future Pay Commissions fall in your remaining service. Calculations based on 7th CPC alone.`,
+  ].filter(Boolean);
+
+  document.getElementById('recommendations').innerHTML=recs.map(r=>`<li>${r}</li>`).join('');
+}
+
+function resetForm() {
+  document.getElementById('form-section').style.display='block';
+  document.getElementById('results').style.display='none';
+  document.getElementById('pvInsightBanner').style.display='none';
+  document.querySelectorAll('.chart-tab').forEach((t,i)=>t.classList.toggle('active',i===0));
+  document.querySelectorAll('.chart-panel').forEach((p,i)=>p.classList.toggle('active',i===0));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>
