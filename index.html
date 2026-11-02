@@ -1,34 +1,34 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="mr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Higher Education Pension Calculator</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<title>उच्च शिक्षण पेन्शन कॅल्क्युलेटर</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&family=Noto+Sans+Devanagari:wght@300;400;500;600;700&family=Noto+Serif+Devanagari:wght@400;700;900&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
   :root {
     --bg: #0d0f14; --surface: #13161d; --surface2: #1a1e27;
     --border: #252a36; --accent: #c9a84c; --accent2: #7eb8d4;
     --accent3: #6fcf97; --accent-red: #eb5757;
-    --text: #e8e6e0; --muted: #7a8099; --nps: #7eb8d4; --ups: #c9a84c;
+    --text: #e8e6e0; --muted: #7a8099; --nps: #7eb8d4; --ups: #c9a84c; --rnps: #c39bd3;
   }
   * { margin:0; padding:0; box-sizing:border-box; }
-  body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; overflow-x:hidden; }
+  body { font-family:'DM Sans','Noto Sans Devanagari',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; overflow-x:hidden; }
   body::before { content:''; position:fixed; top:-30%; right:-20%; width:700px; height:700px; background:radial-gradient(circle,rgba(201,168,76,.05) 0%,transparent 70%); pointer-events:none; z-index:0; }
   body::after  { content:''; position:fixed; bottom:-20%; left:-10%; width:500px; height:500px; background:radial-gradient(circle,rgba(126,184,212,.04) 0%,transparent 70%); pointer-events:none; z-index:0; }
   .container { max-width:1200px; margin:0 auto; padding:0 24px; position:relative; z-index:1; }
-  header { padding:48px 0 40px; border-bottom:1px solid var(--border); margin-bottom:48px; }
+  header { position:relative; padding:48px 0 40px; border-bottom:1px solid var(--border); margin-bottom:48px; }
   .header-badge { display:inline-flex; align-items:center; gap:8px; background:rgba(201,168,76,.1); border:1px solid rgba(201,168,76,.25); border-radius:100px; padding:5px 14px 5px 10px; font-size:11px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); margin-bottom:20px; }
   .header-badge span { width:6px; height:6px; border-radius:50%; background:var(--accent); display:block; animation:pulse 2s infinite; }
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
-  h1 { font-family:'Playfair Display',serif; font-size:clamp(28px,4vw,48px); font-weight:900; line-height:1.1; letter-spacing:-.02em; color:var(--text); margin-bottom:12px; }
+  h1 { font-family:'Playfair Display','Noto Serif Devanagari',serif; font-size:clamp(28px,4vw,48px); font-weight:900; line-height:1.1; letter-spacing:-.02em; color:var(--text); margin-bottom:12px; }
   h1 em { color:var(--accent); font-style:normal; }
   .subtitle { color:var(--muted); font-size:15px; font-weight:300; max-width:560px; }
 
   .card { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:32px; margin-bottom:24px; transition:border-color .2s; }
   .card:hover { border-color:rgba(201,168,76,.2); }
-  .card-title { font-family:'Playfair Display',serif; font-size:18px; font-weight:700; color:var(--text); margin-bottom:6px; display:flex; align-items:center; gap:10px; }
+  .card-title { font-family:'Playfair Display','Noto Serif Devanagari',serif; font-size:18px; font-weight:700; color:var(--text); margin-bottom:6px; display:flex; align-items:center; gap:10px; }
   .card-title .icon { width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:15px; background:rgba(201,168,76,.1); border:1px solid rgba(201,168,76,.2); }
   .card-desc { font-size:13px; color:var(--muted); margin-bottom:28px; }
 
@@ -36,53 +36,60 @@
   .form-grid.cols-3 { grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); }
   .field { display:flex; flex-direction:column; gap:7px; }
   .field label { font-size:11.5px; font-weight:600; text-transform:uppercase; letter-spacing:.07em; color:var(--muted); }
-  .field input, .field select { background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:12px 16px; font-family:'DM Sans',sans-serif; font-size:14px; color:var(--text); width:100%; outline:none; transition:all .2s; -webkit-appearance:none; }
+  .field input, .field select { background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:12px 16px; font-family:'DM Sans','Noto Sans Devanagari',sans-serif; font-size:14px; color:var(--text); width:100%; outline:none; transition:all .2s; -webkit-appearance:none; }
   .field input:focus,.field select:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(201,168,76,.1); }
-  .field input[readonly] { color:var(--accent); font-family:'DM Mono',monospace; font-size:13px; cursor:not-allowed; opacity:.8; }
+  .field input[readonly] { color:var(--accent); font-family:'DM Mono','Noto Sans Devanagari',monospace; font-size:13px; cursor:not-allowed; opacity:.8; }
   .field-hint { font-size:11px; color:var(--muted); margin-top:3px; }
 
-  .calc-btn { width:100%; padding:16px 32px; background:var(--accent); color:#0d0f14; border:none; border-radius:12px; font-family:'DM Sans',sans-serif; font-size:16px; font-weight:700; cursor:pointer; transition:all .2s; letter-spacing:.02em; margin-top:8px; }
+  .lang-toggle { position:absolute; top:18px; right:0; display:flex; background:var(--surface2); border:1px solid var(--border); border-radius:100px; padding:3px; gap:2px; z-index:5; }
+  .lang-toggle button { border:none; background:transparent; color:var(--muted); font-family:'DM Sans','Noto Sans Devanagari',sans-serif; font-size:13px; font-weight:600; padding:7px 16px; border-radius:100px; cursor:pointer; transition:all .2s; }
+  @media(max-width:640px){ .lang-toggle { position:static; width:max-content; margin-bottom:16px; } }
+  .lang-toggle button.on { background:var(--accent); color:#0d0f14; }
+  .calc-btn { width:100%; padding:16px 32px; background:var(--accent); color:#0d0f14; border:none; border-radius:12px; font-family:'DM Sans','Noto Sans Devanagari',sans-serif; font-size:16px; font-weight:700; cursor:pointer; transition:all .2s; letter-spacing:.02em; margin-top:8px; }
   .calc-btn:hover { background:#dbb94f; transform:translateY(-1px); box-shadow:0 8px 24px rgba(201,168,76,.25); }
   .calc-btn:active { transform:translateY(0); }
 
   #results { display:none; animation:fadeSlide .5s ease both; }
   @keyframes fadeSlide { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
   .results-header { text-align:center; padding:40px 0 32px; }
-  .results-header h2 { font-family:'Playfair Display',serif; font-size:32px; font-weight:700; margin-bottom:8px; }
+  .results-header h2 { font-family:'Playfair Display','Noto Serif Devanagari',serif; font-size:32px; font-weight:700; margin-bottom:8px; }
 
   .summary-chips { display:flex; flex-wrap:wrap; gap:12px; justify-content:center; margin-bottom:40px; }
   .chip { background:var(--surface); border:1px solid var(--border); border-radius:100px; padding:8px 18px; font-size:13px; color:var(--muted); }
   .chip strong { color:var(--text); font-weight:600; }
 
-  .compare-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:32px; }
+  .compare-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:20px; margin-bottom:32px; }
   @media(max-width:680px){.compare-grid{grid-template-columns:1fr}}
   .scheme-card { border-radius:16px; padding:28px; position:relative; overflow:hidden; }
   .scheme-card.nps { background:linear-gradient(135deg,rgba(126,184,212,.08) 0%,rgba(126,184,212,.03) 100%); border:1px solid rgba(126,184,212,.25); }
   .scheme-card.ups { background:linear-gradient(135deg,rgba(201,168,76,.08) 0%,rgba(201,168,76,.03) 100%); border:1px solid rgba(201,168,76,.25); }
   .scheme-label { font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; margin-bottom:8px; }
+  .scheme-card.rnps { background:linear-gradient(135deg,rgba(195,155,211,.09) 0%,rgba(195,155,211,.03) 100%); border:1px solid rgba(195,155,211,.28); }
+  .scheme-card.rnps .scheme-label { color:var(--rnps); }
+  .metric-value.highlight-rnps { color:var(--rnps); }
   .scheme-card.nps .scheme-label { color:var(--nps); }
   .scheme-card.ups .scheme-label { color:var(--ups); }
-  .scheme-name { font-family:'Playfair Display',serif; font-size:20px; font-weight:700; margin-bottom:20px; }
+  .scheme-name { font-family:'Playfair Display','Noto Serif Devanagari',serif; font-size:20px; font-weight:700; margin-bottom:20px; }
   .metric { margin-bottom:16px; padding-bottom:16px; border-bottom:1px solid var(--border); }
   .metric:last-child { border-bottom:none; margin-bottom:0; padding-bottom:0; }
   .metric-label { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; margin-bottom:4px; }
-  .metric-value { font-family:'DM Mono',monospace; font-size:22px; font-weight:500; color:var(--text); }
+  .metric-value { font-family:'DM Mono','Noto Sans Devanagari',monospace; font-size:22px; font-weight:500; color:var(--text); }
   .metric-value.highlight-nps { color:var(--nps); }
   .metric-value.highlight-ups { color:var(--ups); }
   .metric-sub { font-size:12px; color:var(--muted); margin-top:3px; }
-  .pv-badge { display:inline-flex; align-items:center; gap:5px; background:rgba(111,207,151,.1); border:1px solid rgba(111,207,151,.2); border-radius:6px; padding:3px 10px; margin-top:6px; font-size:11.5px; color:var(--accent3); font-family:'DM Mono',monospace; font-weight:500; }
-  .pv-badge .pv-lbl { font-family:'DM Sans',sans-serif; font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:rgba(111,207,151,.7); margin-right:2px; }
+  .pv-badge { display:inline-flex; align-items:center; gap:5px; background:rgba(111,207,151,.1); border:1px solid rgba(111,207,151,.2); border-radius:6px; padding:3px 10px; margin-top:6px; font-size:11.5px; color:var(--accent3); font-family:'DM Mono','Noto Sans Devanagari',monospace; font-weight:500; }
+  .pv-badge .pv-lbl { font-family:'DM Sans','Noto Sans Devanagari',sans-serif; font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:rgba(111,207,151,.7); margin-right:2px; }
 
   .winner-banner { background:linear-gradient(135deg,rgba(111,207,151,.1),rgba(111,207,151,.04)); border:1px solid rgba(111,207,151,.25); border-radius:12px; padding:20px 24px; display:flex; align-items:center; gap:16px; margin-bottom:32px; }
   .winner-icon { font-size:28px; }
   .winner-text h3 { font-size:15px; font-weight:600; color:var(--accent3); margin-bottom:3px; }
   .winner-text p { font-size:13px; color:var(--muted); }
 
-  .section-heading { font-family:'Playfair Display',serif; font-size:20px; font-weight:700; margin-bottom:20px; padding-bottom:12px; border-bottom:1px solid var(--border); }
+  .section-heading { font-family:'Playfair Display','Noto Serif Devanagari',serif; font-size:20px; font-weight:700; margin-bottom:20px; padding-bottom:12px; border-bottom:1px solid var(--border); }
 
   /* Chart tabs */
   .chart-tabs { display:flex; gap:8px; margin-bottom:24px; flex-wrap:wrap; }
-  .chart-tab { padding:8px 18px; border-radius:100px; border:1px solid var(--border); background:transparent; color:var(--muted); font-family:'DM Sans',sans-serif; font-size:13px; font-weight:500; cursor:pointer; transition:all .2s; }
+  .chart-tab { padding:8px 18px; border-radius:100px; border:1px solid var(--border); background:transparent; color:var(--muted); font-family:'DM Sans','Noto Sans Devanagari',sans-serif; font-size:13px; font-weight:500; cursor:pointer; transition:all .2s; }
   .chart-tab.active { background:var(--accent); color:#0d0f14; border-color:var(--accent); font-weight:700; }
   .chart-wrap { position:relative; background:var(--surface2); border:1px solid var(--border); border-radius:12px; padding:24px; }
   .chart-panel { display:none; }
@@ -94,7 +101,7 @@
   .timeline-item { position:relative; margin-bottom:24px; padding:16px 20px; background:var(--surface); border:1px solid var(--border); border-radius:12px; transition:border-color .2s; }
   .timeline-item:hover { border-color:rgba(201,168,76,.2); }
   .timeline-item::before { content:''; position:absolute; left:-28px; top:50%; transform:translateY(-50%); width:10px; height:10px; border-radius:50%; background:var(--accent); border:2px solid var(--bg); box-shadow:0 0 0 2px var(--accent); }
-  .timeline-year { font-family:'DM Mono',monospace; font-size:11px; color:var(--accent); font-weight:500; margin-bottom:4px; }
+  .timeline-year { font-family:'DM Mono','Noto Sans Devanagari',monospace; font-size:11px; color:var(--accent); font-weight:500; margin-bottom:4px; }
   .timeline-event { font-size:14px; font-weight:600; color:var(--text); margin-bottom:2px; }
   .timeline-detail { font-size:12px; color:var(--muted); }
 
@@ -111,7 +118,7 @@
   .tag.paycomm { background:rgba(126,184,212,.15); color:var(--nps); }
   .tag.retire { background:rgba(235,87,87,.15); color:var(--accent-red); }
   .tag.join { background:rgba(111,207,151,.15); color:var(--accent3); }
-  .mono { font-family:'DM Mono',monospace; }
+  .mono { font-family:'DM Mono','Noto Sans Devanagari',monospace; }
 
   /* Recs */
   .rec-card { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:28px 32px; margin-bottom:24px; }
@@ -119,7 +126,8 @@
   .rec-list li { padding:10px 0; border-bottom:1px solid var(--border); font-size:13.5px; color:var(--muted); display:flex; align-items:flex-start; gap:10px; }
   .rec-list li:last-child { border-bottom:none; }
   .rec-list li::before { content:'→'; color:var(--accent); font-weight:700; flex-shrink:0; margin-top:1px; }
-  .reset-btn { display:block; margin:32px auto 0; padding:12px 32px; background:transparent; border:1px solid var(--border); border-radius:10px; color:var(--muted); font-family:'DM Sans',sans-serif; font-size:14px; cursor:pointer; transition:all .2s; }
+  .disclaimer { background:rgba(126,184,212,.05); border:1px solid rgba(126,184,212,.15); border-radius:10px; padding:16px 20px; font-size:12px; color:var(--muted); line-height:1.7; margin-top:24px; }
+  .reset-btn { display:block; margin:32px auto 0; padding:12px 32px; background:transparent; border:1px solid var(--border); border-radius:10px; color:var(--muted); font-family:'DM Sans','Noto Sans Devanagari',sans-serif; font-size:14px; cursor:pointer; transition:all .2s; }
   .reset-btn:hover { border-color:var(--accent); color:var(--accent); }
 
   /* Footer */
@@ -127,7 +135,7 @@
   .footer-inner { display:inline-flex; flex-direction:column; align-items:center; gap:12px; }
   .footer-badge { display:inline-flex; align-items:center; gap:12px; background:rgba(201,168,76,.07); border:1px solid rgba(201,168,76,.2); border-radius:100px; padding:12px 28px; }
   .footer-badge .cap { font-size:20px; }
-  .footer-name { font-family:'Playfair Display',serif; font-size:16px; font-weight:700; color:var(--accent); }
+  .footer-name { font-family:'Playfair Display','Noto Serif Devanagari',serif; font-size:16px; font-weight:700; color:var(--accent); }
   .footer-inst { font-size:13px; color:var(--muted); margin-top:2px; letter-spacing:.03em; }
   .footer-divider { width:32px; height:1px; background:var(--border); margin:4px auto; }
   .footer-copy { font-size:11px; color:var(--muted); letter-spacing:.07em; text-transform:uppercase; }
@@ -139,11 +147,13 @@
 <div class="container">
 
   <header>
-    <div class="header-badge"><span></span>UGC 7th Pay Commission · NPS vs UPS</div>
+    <div class="lang-toggle"><button id="langMr" onclick="setLang('mr')">मराठी</button><button id="langEn" onclick="setLang('en')">English</button></div>
+    <div class="header-badge"><span></span>UGC 7th Pay Commission · NPS vs UPS vs RNPS</div>
     <h1>Higher Education<br><em>Pension Calculator</em></h1>
     <p class="subtitle">Comprehensive retirement planning for university lecturers, assistant professors, associate professors &amp; professors under UGC pay scales.</p>
   </header>
 
+  <!-- ══════════════════════ INPUT FORM ══════════════════════ -->
   <div id="form-section">
 
     <div class="card">
@@ -172,12 +182,12 @@
 
     <div class="card">
       <div class="card-title"><span class="icon">💰</span> Pay Scale Configuration</div>
-      <p class="card-desc">Starting pay auto-adjusts based on your joining date (6th vs 7th CPC baseline).</p>
+      <p class="card-desc">If joined before July 1 2016, 6th CPC grade pay is used first; 7th CPC applied automatically from July 2016. Both promotion years counted from date of joining.</p>
       <div class="form-grid">
         <div class="field">
           <label>Starting Basic Pay (₹)</label>
-          <input type="number" id="startingBasic" value="57700" min="1000">
-          <span class="field-hint" id="basicHint">Level 10 – Assistant Professor (7th CPC)</span>
+          <input type="number" id="startingBasic" value="57700" min="1000" onchange="updateStartingPayHint(false)">
+          <span class="field-hint" id="startingBasicHint">Level 10 – 7th CPC (joined on/after July 2016)</span>
         </div>
         <div class="field">
           <label>Assoc. Prof. After (Years from Joining)</label>
@@ -192,11 +202,19 @@
       </div>
       <div style="margin-top:20px;">
         <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:16px;">
-          <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:12px;">UGC 7th CPC Pay Matrix — Designation Baselines</div>
+          <!-- 6th CPC -->
+          <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px;">6th CPC (Pre July 2016) — Grade Pay + Basic</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;text-align:center;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--border)">
+            <div><div style="color:var(--muted);font-size:11px;margin-bottom:4px;">Asst. Professor</div><div style="font-family:'DM Mono','Noto Sans Devanagari',monospace;color:var(--accent3);font-size:13px;">₹15,600 + GP ₹6,000</div><div style="font-size:11px;color:var(--muted);margin-top:2px;">PB-3 · Basic ~₹21,600</div></div>
+            <div><div style="color:var(--muted);font-size:11px;margin-bottom:4px;">Assoc. Professor</div><div style="font-family:'DM Mono','Noto Sans Devanagari',monospace;color:var(--accent);font-size:13px;">₹37,400 + GP ₹9,000</div><div style="font-size:11px;color:var(--muted);margin-top:2px;">PB-4 · Basic ~₹46,400</div></div>
+            <div><div style="color:var(--muted);font-size:11px;margin-bottom:4px;">Professor</div><div style="font-family:'DM Mono','Noto Sans Devanagari',monospace;color:var(--nps);font-size:13px;">₹37,400 + GP ₹10,000</div><div style="font-size:11px;color:var(--muted);margin-top:2px;">PB-4 · Basic ~₹47,400</div></div>
+          </div>
+          <!-- 7th CPC -->
+          <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px;">7th CPC (From July 1, 2016) — Pay Matrix</div>
           <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;text-align:center;">
-            <div><div style="color:var(--muted);font-size:11px;margin-bottom:6px;">Asst. Professor</div><div style="font-family:'DM Mono',monospace;color:var(--accent3);font-size:15px;">₹57,700</div><div style="font-size:11px;color:var(--muted);margin-top:3px;">Level 10</div></div>
-            <div><div style="color:var(--muted);font-size:11px;margin-bottom:6px;">Assoc. Professor</div><div style="font-family:'DM Mono',monospace;color:var(--accent);font-size:15px;">₹1,31,400</div><div style="font-size:11px;color:var(--muted);margin-top:3px;">Level 13A</div></div>
-            <div><div style="color:var(--muted);font-size:11px;margin-bottom:6px;">Professor</div><div style="font-family:'DM Mono',monospace;color:var(--nps);font-size:15px;">₹1,44,200</div><div style="font-size:11px;color:var(--muted);margin-top:3px;">Level 14</div></div>
+            <div><div style="color:var(--muted);font-size:11px;margin-bottom:6px;">Asst. Professor</div><div style="font-family:'DM Mono','Noto Sans Devanagari',monospace;color:var(--accent3);font-size:15px;">₹57,700</div><div style="font-size:11px;color:var(--muted);margin-top:3px;">Level 10</div></div>
+            <div><div style="color:var(--muted);font-size:11px;margin-bottom:6px;">Assoc. Professor</div><div style="font-family:'DM Mono','Noto Sans Devanagari',monospace;color:var(--accent);font-size:15px;">₹1,31,400</div><div style="font-size:11px;color:var(--muted);margin-top:3px;">Level 13A</div></div>
+            <div><div style="color:var(--muted);font-size:11px;margin-bottom:6px;">Professor</div><div style="font-family:'DM Mono','Noto Sans Devanagari',monospace;color:var(--nps);font-size:15px;">₹1,44,200</div><div style="font-size:11px;color:var(--muted);margin-top:3px;">Level 14</div></div>
           </div>
         </div>
       </div>
@@ -204,7 +222,7 @@
 
     <div class="card">
       <div class="card-title"><span class="icon">📋</span> Future Pay Commission Multipliers</div>
-      <p class="card-desc">Estimated fitment factors for future pay commissions applied on 1st July of respective year.</p>
+      <p class="card-desc">Estimated fitment factors for future pay commissions (8th CPC 2026, 9th CPC 2036, etc.).</p>
       <div class="form-grid cols-3">
         <div class="field"><label>8th CPC Year</label><input type="number" id="cpc8year" value="2026"></div>
         <div class="field"><label>8th CPC Fitment Factor</label><input type="number" id="cpc8factor" value="1.92" step="0.01"><span class="field-hint">Expected ~1.92×</span></div>
@@ -217,14 +235,19 @@
 
     <div class="card">
       <div class="card-title"><span class="icon">📈</span> NPS Configuration</div>
-      <p class="card-desc">Enter current NPS corpus and contribution parameters to compare NPS vs UPS.</p>
+      <p class="card-desc">Employer contribution was <strong style="color:var(--accent)">10%</strong> until March 2019, then raised to <strong style="color:var(--accent)">14%</strong> from April 1, 2019. The calculator applies the correct rate automatically based on year.</p>
       <div class="form-grid">
         <div class="field"><label>Present NPS Corpus (₹)</label><input type="number" id="npsCorpus" value="0" min="0"><span class="field-hint">Current accumulated corpus</span></div>
         <div class="field"><label>Expected NPS Return (% p.a.)</label><input type="number" id="npsReturn" value="9" step="0.1"><span class="field-hint">Historical avg ~9–10%</span></div>
-        <div class="field"><label>Employee Contribution (%)</label><input type="number" id="npsEmpPct" value="10"><span class="field-hint">10% of Basic + DA</span></div>
-        <div class="field"><label>Employer Contribution (%)</label><input type="number" id="npsEmpRPct" value="14"><span class="field-hint">14% of Basic (Govt.)</span></div>
+        <div class="field"><label>Employee Contribution (%)</label><input type="number" id="npsEmpPct" value="10"><span class="field-hint">10% of Basic + DA (fixed)</span></div>
+        <div class="field"><label>Employer % (pre Apr 2019)</label><input type="number" id="npsEmpRPctOld" value="10"><span class="field-hint">Was 10% before April 1, 2019</span></div>
+        <div class="field"><label>Employer % (from Apr 2019)</label><input type="number" id="npsEmpRPct" value="14"><span class="field-hint">Raised to 14% from April 1, 2019</span></div>
         <div class="field"><label>Annuity Rate (% p.a.)</label><input type="number" id="annuityRate" value="6" step="0.1"><span class="field-hint">Corpus → pension conversion</span></div>
         <div class="field"><label>Annuity Purchase %</label><input type="number" id="annuityPct" value="40" min="40" max="100"><span class="field-hint">Min 40% must be annuitised</span></div>
+        <div class="field"><label>Invest Lump Sum in FD?</label>
+          <select id="fdInvest"><option value="yes" selected>Yes – add FD interest to pension</option><option value="no">No – ignore lump sum income</option></select>
+          <span class="field-hint">Lump sum (100% − annuity %) placed in Fixed Deposit</span></div>
+        <div class="field"><label>FD Interest Rate (% p.a.)</label><input type="number" id="fdRate" value="7" step="0.1" min="0" max="15"><span class="field-hint">Monthly interest is added to NPS pension (principal stays intact)</span></div>
       </div>
     </div>
 
@@ -232,8 +255,12 @@
       <div class="card-title"><span class="icon">📊</span> Dearness Allowance &amp; Assumptions</div>
       <p class="card-desc">DA growth rate used between pay commissions for gross pay &amp; pension calculations.</p>
       <div class="form-grid">
-        <div class="field"><label>DA Growth Rate (% per year)</label><input type="number" id="daGrowth" value="6" step="0.5" onchange="computeDerived()"><span class="field-hint">Resets to 0% at each CPC</span></div>
-        <div class="field"><label>Estimated DA at Retirement (%)</label><input type="text" id="daAtRetirement" readonly placeholder="Auto-computed"></div>
+        <div class="field"><label>DA Growth Rate (% per year)</label><input type="number" id="daGrowth" value="4" step="0.5" onchange="computeDerived()"><span class="field-hint">DA resets to 0 after each Pay Commission, then grows at this rate</span></div>
+        <div class="field">
+          <label>DA at Retirement (%) <span style="color:var(--accent);font-size:10px;font-weight:700;">EDITABLE</span></label>
+          <input type="number" id="daAtRetirement" placeholder="Auto-computed — override if needed" step="1" min="0" max="500" style="color:var(--accent3);">
+          <span class="field-hint">Auto-filled based on last CPC reset + growth. You can manually override this.</span>
+        </div>
         <div class="field"><label>Inflation Rate for PV (% p.a.)</label><input type="number" id="inflationRate" value="6" step="0.5" min="1" max="20"><span class="field-hint">Used to discount future values to today's money</span></div>
       </div>
     </div>
@@ -241,6 +268,7 @@
     <button class="calc-btn" onclick="calculate()">⚡ Calculate Pension Benefits</button>
   </div>
 
+  <!-- ══════════════════════ RESULTS ══════════════════════ -->
   <div id="results">
     <div class="results-header">
       <h2>Pension Analysis Report</h2>
@@ -257,18 +285,20 @@
       </div>
     </div>
 
+    <!-- PV Insight Banner -->
     <div id="pvInsightBanner" style="background:linear-gradient(135deg,rgba(111,207,151,.07),rgba(111,207,151,.02));border:1px solid rgba(111,207,151,.2);border-radius:14px;padding:20px 24px;margin-bottom:24px;display:none;">
       <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent3);margin-bottom:10px;">💡 Present Value Decoder — What Future Money Means in Today's Rupees</div>
       <div id="pvInsightText" style="font-size:13.5px;color:var(--muted);line-height:1.8;"></div>
     </div>
 
+    <!-- Scheme Cards -->
     <div class="compare-grid">
       <div class="scheme-card nps">
         <div class="scheme-label">National Pension System</div>
         <div class="scheme-name">NPS Benefit</div>
         <div class="metric"><div class="metric-label">Projected Total Corpus</div><div class="metric-value highlight-nps" id="npsTotalCorpus">—</div><div class="metric-sub">At retirement</div><div class="pv-badge"><span class="pv-lbl">PV Today →</span><span id="pvNpsCorpus">—</span></div></div>
         <div class="metric"><div class="metric-label">Lump Sum (60% withdrawal)</div><div class="metric-value" id="npsLumpsum">—</div><div class="pv-badge"><span class="pv-lbl">PV Today →</span><span id="pvNpsLumpsum">—</span></div></div>
-        <div class="metric"><div class="metric-label">Monthly Pension</div><div class="metric-value highlight-nps" id="npsMonthlyPension">—</div><div class="metric-sub" id="npsAnnuityNote">—</div><div class="pv-badge"><span class="pv-lbl">PV Today →</span><span id="pvNpsPension">—</span>/mo</div></div>
+        <div class="metric"><div class="metric-label">Monthly Pension (Annuity + FD Interest)</div><div class="metric-value highlight-nps" id="npsMonthlyPension">—</div><div class="metric-sub" id="npsAnnuityNote">—</div><div class="pv-badge"><span class="pv-lbl">PV Today →</span><span id="pvNpsPension">—</span>/mo</div></div>
         <div class="metric"><div class="metric-label">Gratuity</div><div class="metric-value" id="npsGratuity">—</div><div class="metric-sub">Max ₹20 lakh (7th CPC)</div><div class="pv-badge"><span class="pv-lbl">PV Today →</span><span id="pvNpsGratuity">—</span></div></div>
       </div>
       <div class="scheme-card ups">
@@ -279,8 +309,19 @@
         <div class="metric"><div class="metric-label">Gratuity</div><div class="metric-value" id="upsGratuity">—</div><div class="metric-sub">15/26 × Basic × Service (capped)</div><div class="pv-badge"><span class="pv-lbl">PV Today →</span><span id="pvUpsGratuity">—</span></div></div>
         <div class="metric"><div class="metric-label">DA-linked Inflation Protection</div><div class="metric-value" style="font-size:16px;color:var(--accent3);">✓ Yes</div><div class="metric-sub">Pension rises with DA revisions</div></div>
       </div>
+
+      <div class="scheme-card rnps">
+        <div class="scheme-label">Maharashtra Govt · Revised NPS</div>
+        <div class="scheme-name">RNPS Benefit</div>
+        <div class="metric"><div class="metric-label">Assured Monthly Pension</div><div class="metric-value highlight-rnps" id="rnpsPension">—</div><div class="metric-sub" id="rnpsPensionNote">—</div><div class="pv-badge"><span class="pv-lbl">PV Today →</span><span id="pvRnpsPension">—</span>/mo</div></div>
+        <div class="metric"><div class="metric-label">Pension incl. Dearness Relief (at retirement)</div><div class="metric-value" id="rnpsPensionDR">—</div><div class="metric-sub">Pension + DR @ estimated DA %</div></div>
+        <div class="metric"><div class="metric-label">NPS Corpus Treatment</div><div class="metric-value" style="font-size:16px;" id="rnpsCorpusSplit">—</div><div class="metric-sub">60% deposited with Govt · 40% annuity (adjusted against pension) · no NPS lump sum</div></div>
+        <div class="metric"><div class="metric-label">Gratuity</div><div class="metric-value" id="rnpsGratuity">—</div><div class="metric-sub">Retirement gratuity applies under RNPS</div><div class="pv-badge"><span class="pv-lbl">PV Today →</span><span id="pvRnpsGratuity">—</span></div></div>
+        <div class="metric"><div class="metric-label">Family Pension</div><div class="metric-value" style="font-size:16px;" id="rnpsFamily">—</div><div class="metric-sub">60% of admissible pension + dearness relief</div></div>
+      </div>
     </div>
 
+    <!-- ══ CHARTS ══ -->
     <div class="card">
       <div class="section-heading">📊 Visual Comparison</div>
       <div class="chart-tabs">
@@ -309,11 +350,13 @@
       </div>
     </div>
 
+    <!-- Timeline -->
     <div class="card">
       <div class="section-heading">Career &amp; Pay Timeline</div>
       <div class="timeline" id="careerTimeline"></div>
     </div>
 
+    <!-- Pay Table -->
     <div class="card">
       <div class="section-heading">Pay Progression Details</div>
       <div class="table-wrap">
@@ -324,15 +367,21 @@
       </div>
     </div>
 
+    <!-- Recommendations -->
     <div class="rec-card">
       <div class="section-heading">Key Insights &amp; Recommendations</div>
       <ul class="rec-list" id="recommendations"></ul>
     </div>
 
+    <div class="disclaimer">⚠️ <strong>Disclaimer:</strong> Projections are based on assumptions about future pay commissions, DA rates, and NPS returns. Actual benefits may vary. Future CPC fitment factors are estimated, not officially announced. Professor promotion is applied after completing specified years from joining, per UGC CAS norms. NPS corpus is market-linked. UPS availability depends on institution adoption. Consult your institution's finance cell and a certified financial advisor for official figures.</div>
+
     <button class="reset-btn" onclick="resetForm()">← Recalculate</button>
   </div>
 
-</div><footer>
+</div><!-- /container -->
+
+<!-- ══════════════════════ FOOTER ══════════════════════ -->
+<footer>
   <div class="footer-inner">
     <div class="footer-badge">
       <span class="cap">🎓</span>
@@ -347,14 +396,71 @@
 </footer>
 
 <script>
-const UGC_PAY_7TH = { asst: 57700, assoc: 131400, prof: 144200 };
-const UGC_PAY_6TH = { asst: 21600, assoc: 46400, prof: 47400 }; 
+const UGC_PAY = { asst: 57700, assoc: 131400, prof: 144200 };
 const INCR = 0.03;
 let charts = {};
 
+// ═════════ LANGUAGE (मराठी / English) ═════════
+let LANG = 'mr';
+const L   = (en, mr) => LANG === 'mr' ? mr : en;
+const LOC = () => LANG === 'mr' ? 'mr-IN-u-nu-latn' : 'en-IN';
+const MO  = () => L('/mo', '/महिना');
+const DESIG_MR = {'Assistant Professor':'सहायक प्राध्यापक','Associate Professor':'सहयोगी प्राध्यापक','Professor':'प्राध्यापक'};
+const dz = d => LANG === 'mr' ? (DESIG_MR[d] || d) : d;
+function evl(lb) {
+  if (LANG !== 'mr') return lb;
+  const m = {'Retirement':'सेवानिवृत्ती','Joining':'सेवेत रुजू','Service Year':'सेवा वर्ष',
+    'Promoted: Associate Professor':'पदोन्नती: सहयोगी प्राध्यापक','Promoted: Professor':'पदोन्नती: प्राध्यापक',
+    '7th Pay Commission — Fitment 2.67×':'7 वा वेतन आयोग — फिटमेंट 2.67×'};
+  if (m[lb]) return m[lb];
+  const r = lb.match(/^(\d+)th Pay Commission$/);
+  return r ? r[1] + ' वा वेतन आयोग' : lb;
+}
+const MR_DICT = {"UGC 7th Pay Commission · NPS vs UPS vs RNPS": "UGC 7 वा वेतन आयोग · NPS विरुद्ध UPS विरुद्ध RNPS", "Higher Education": "उच्च शिक्षण", "Pension Calculator": "पेन्शन कॅल्क्युलेटर", "Comprehensive retirement planning for university lecturers, assistant professors, associate professors & professors under UGC pay scales.": "UGC वेतनश्रेणीतील सहायक प्राध्यापक, सहयोगी प्राध्यापक आणि प्राध्यापकांसाठी सर्वसमावेशक सेवानिवृत्ती नियोजन.", "Personal & Service Details": "वैयक्तिक व सेवेचा तपशील", "Enter your basic information to compute service duration and retirement timeline.": "सेवा कालावधी व सेवानिवृत्तीची वेळरेषा काढण्यासाठी मूलभूत माहिती भरा.", "Date of Joining Service": "सेवेत रुजू होण्याची तारीख", "Date of Birth": "जन्मतारीख", "Retirement Date": "सेवानिवृत्तीची तारीख", "Auto-computed (age 60)": "आपोआप मोजले जाते (वय 60)", "Retirement at age 60 as per UGC norms": "UGC नियमांनुसार वयाच्या 60 व्या वर्षी सेवानिवृत्ती", "Total Service (Years)": "एकूण सेवा (वर्षे)", "Auto-computed": "आपोआप मोजले जाते", "Pay Scale Configuration": "वेतनश्रेणी सेटिंग्ज", "If joined before July 1 2016, 6th CPC grade pay is used first; 7th CPC applied automatically from July 2016. Both promotion years counted from date of joining.": "1 जुलै 2016 पूर्वी रुजू झाले असल्यास आधी 6 व्या वेतन आयोगातील ग्रेड पे वापरला जातो; जुलै 2016 पासून 7 वा वेतन आयोग आपोआप लागू होतो. दोन्ही पदोन्नतींची वर्षे रुजू होण्याच्या तारखेपासून मोजली जातात.", "Starting Basic Pay (₹)": "सुरुवातीचे मूळ वेतन (₹)", "Assoc. Prof. After (Years from Joining)": "सहयोगी प्राध्यापक पदोन्नती (रुजू झाल्यापासून वर्षे)", "Default 12 yrs · Editable": "डीफॉल्ट 12 वर्षे · बदलता येते", "Professor After (Years from Joining)": "प्राध्यापक पदोन्नती (रुजू झाल्यापासून वर्षे)", "Default 15 yrs from joining · Editable": "रुजू झाल्यापासून डीफॉल्ट 15 वर्षे · बदलता येते", "6th CPC (Pre July 2016) — Grade Pay + Basic": "6 वा वेतन आयोग (जुलै 2016 पूर्वी) — ग्रेड पे + मूळ वेतन", "Asst. Professor": "सहायक प्राध्यापक", "Assoc. Professor": "सहयोगी प्राध्यापक", "Professor": "प्राध्यापक", "₹15,600 + GP ₹6,000": "₹15,600 + ग्रेड पे ₹6,000", "PB-3 · Basic ~₹21,600": "PB-3 · मूळ वेतन ~₹21,600", "₹37,400 + GP ₹9,000": "₹37,400 + ग्रेड पे ₹9,000", "PB-4 · Basic ~₹46,400": "PB-4 · मूळ वेतन ~₹46,400", "₹37,400 + GP ₹10,000": "₹37,400 + ग्रेड पे ₹10,000", "PB-4 · Basic ~₹47,400": "PB-4 · मूळ वेतन ~₹47,400", "7th CPC (From July 1, 2016) — Pay Matrix": "7 वा वेतन आयोग (1 जुलै 2016 पासून) — वेतन मॅट्रिक्स", "Level 10": "स्तर 10", "Level 13A": "स्तर 13A", "Level 14": "स्तर 14", "Future Pay Commission Multipliers": "भविष्यातील वेतन आयोग गुणक", "Estimated fitment factors for future pay commissions (8th CPC 2026, 9th CPC 2036, etc.).": "भविष्यातील वेतन आयोगांसाठी अंदाजित फिटमेंट फॅक्टर (8 वा आयोग 2026, 9 वा आयोग 2036 इ.).", "8th CPC Year": "8 व्या आयोगाचे वर्ष", "8th CPC Fitment Factor": "8 व्या आयोगाचा फिटमेंट फॅक्टर", "Expected ~1.92×": "अपेक्षित ~1.92×", "9th CPC Year": "9 व्या आयोगाचे वर्ष", "9th CPC Fitment Factor": "9 व्या आयोगाचा फिटमेंट फॅक्टर", "10th CPC Year": "10 व्या आयोगाचे वर्ष", "10th CPC Fitment Factor": "10 व्या आयोगाचा फिटमेंट फॅक्टर", "NPS Configuration": "NPS सेटिंग्ज", "Employer contribution was": "नियोक्ता (शासन) अंशदान मार्च 2019 पर्यंत", "until March 2019, then raised to": "होते, नंतर 1 एप्रिल 2019 पासून", "from April 1, 2019. The calculator applies the correct rate automatically based on year.": "करण्यात आले. कॅल्क्युलेटर वर्षानुसार योग्य दर आपोआप लागू करतो.", "Present NPS Corpus (₹)": "सध्याचा NPS कॉर्पस (₹)", "Current accumulated corpus": "आतापर्यंत जमा झालेला कॉर्पस", "Expected NPS Return (% p.a.)": "अपेक्षित NPS परतावा (% वार्षिक)", "Historical avg ~9–10%": "ऐतिहासिक सरासरी ~9–10%", "Employee Contribution (%)": "कर्मचारी अंशदान (%)", "10% of Basic + DA (fixed)": "मूळ वेतन + DA च्या 10% (निश्चित)", "Employer % (pre Apr 2019)": "नियोक्ता % (एप्रिल 2019 पूर्वी)", "Was 10% before April 1, 2019": "1 एप्रिल 2019 पूर्वी 10% होते", "Employer % (from Apr 2019)": "नियोक्ता % (एप्रिल 2019 पासून)", "Raised to 14% from April 1, 2019": "1 एप्रिल 2019 पासून 14% करण्यात आले", "Annuity Rate (% p.a.)": "ॲन्युइटी दर (% वार्षिक)", "Corpus → pension conversion": "कॉर्पस → पेन्शन रूपांतर", "Annuity Purchase %": "ॲन्युइटी खरेदी %", "Min 40% must be annuitised": "किमान 40% रकमेची ॲन्युइटी घेणे बंधनकारक", "Invest Lump Sum in FD?": "एकरकमी रक्कम FD मध्ये गुंतवायची का?", "Yes – add FD interest to pension": "होय – FD व्याज पेन्शनमध्ये जोडा", "No – ignore lump sum income": "नाही – एकरकमी रकमेचे उत्पन्न वगळा", "Lump sum (100% − annuity %) placed in Fixed Deposit": "एकरकमी रक्कम (100% − ॲन्युइटी %) मुदत ठेवीत (FD) गुंतवली जाते", "FD Interest Rate (% p.a.)": "FD व्याजदर (% वार्षिक)", "Monthly interest is added to NPS pension (principal stays intact)": "मासिक व्याज NPS पेन्शनमध्ये जोडले जाते (मुद्दल कायम राहते)", "Dearness Allowance & Assumptions": "महागाई भत्ता (DA) व गृहीतके", "DA growth rate used between pay commissions for gross pay & pension calculations.": "एकूण वेतन व पेन्शन गणनेसाठी वेतन आयोगांदरम्यान वापरलेला DA वाढीचा दर.", "DA Growth Rate (% per year)": "DA वाढीचा दर (% प्रतिवर्ष)", "DA resets to 0 after each Pay Commission, then grows at this rate": "प्रत्येक वेतन आयोगानंतर DA शून्य होतो, नंतर या दराने वाढतो", "DA at Retirement (%)": "सेवानिवृत्तीच्या वेळी DA (%)", "EDITABLE": "बदलता येते", "Auto-computed — override if needed": "आपोआप मोजले जाते — हवे असल्यास बदला", "Auto-filled based on last CPC reset + growth. You can manually override this.": "शेवटच्या आयोगानंतरच्या शून्यीकरण + वाढीवरून आपोआप भरले जाते. हवे असल्यास तुम्ही हे स्वतः बदलू शकता.", "Inflation Rate for PV (% p.a.)": "वर्तमान मूल्यासाठी महागाई दर (% वार्षिक)", "Used to discount future values to today's money": "भविष्यातील रकमा आजच्या मूल्यात आणण्यासाठी वापरला जातो", "⚡ Calculate Pension Benefits": "⚡ पेन्शन लाभ मोजा", "Pension Analysis Report": "पेन्शन विश्लेषण अहवाल", "Based on UGC Pay Commission & projected career trajectory": "UGC वेतन आयोग व अपेक्षित सेवा-प्रवासावर आधारित", "💡 Present Value Decoder — What Future Money Means in Today's Rupees": "💡 वर्तमान मूल्य (Present Value) — भविष्यातील रक्कम आजच्या रुपयांत किती?", "National Pension System": "राष्ट्रीय पेन्शन प्रणाली (NPS)", "NPS Benefit": "NPS लाभ", "Projected Total Corpus": "अंदाजित एकूण कॉर्पस", "At retirement": "सेवानिवृत्तीच्या वेळी", "PV Today →": "आजचे मूल्य →", "Lump Sum (60% withdrawal)": "एकरकमी रक्कम (60% काढता येणारी)", "Monthly Pension (Annuity + FD Interest)": "मासिक पेन्शन (ॲन्युइटी + FD व्याज)", "/mo": "/महिना", "Gratuity": "उपदान (ग्रॅच्युइटी)", "Max ₹20 lakh (7th CPC)": "कमाल ₹20 लाख (7 वा वेतन आयोग)", "Unified Pension Scheme": "एकीकृत पेन्शन योजना (UPS)", "UPS Benefit": "UPS लाभ", "Monthly Pension": "मासिक पेन्शन", "50% of last 12-month avg basic": "शेवटच्या 12 महिन्यांच्या सरासरी मूळ वेतनाच्या 50%", "Lump Sum at Retirement": "सेवानिवृत्तीच्या वेळी एकरकमी रक्कम", "1/10 of (Basic+DA) per 6m block": "प्रत्येक 6 महिन्यांसाठी (मूळ वेतन+DA) चा 1/10", "15/26 × Basic × Service (capped)": "15/26 × मूळ वेतन × सेवा वर्षे (कमाल मर्यादेसह)", "DA-linked Inflation Protection": "DA शी जोडलेले महागाई संरक्षण", "✓ Yes": "✓ होय", "Pension rises with DA revisions": "DA सुधारणांबरोबर पेन्शन वाढते", "Maharashtra Govt · Revised NPS": "महाराष्ट्र शासन · सुधारित NPS", "RNPS Benefit": "RNPS लाभ", "Assured Monthly Pension": "निश्चित मासिक पेन्शन", "Pension incl. Dearness Relief (at retirement)": "महागाई सवलतीसह पेन्शन (सेवानिवृत्तीच्या वेळी)", "Pension + DR @ estimated DA %": "पेन्शन + महागाई सवलत (अंदाजित DA % प्रमाणे)", "NPS Corpus Treatment": "NPS कॉर्पसची विभागणी", "60% deposited with Govt · 40% annuity (adjusted against pension) · no NPS lump sum": "60% शासनाकडे जमा · 40% ॲन्युइटी (पेन्शनमधून समायोजित) · NPS ची एकरकमी रक्कम नाही", "Retirement gratuity applies under RNPS": "RNPS अंतर्गत सेवानिवृत्ती उपदान लागू", "Family Pension": "कुटुंब निवृत्तीवेतन", "60% of admissible pension + dearness relief": "देय पेन्शनच्या 60% + महागाई सवलत", "📊 Visual Comparison": "📊 आलेखाद्वारे तुलना", "Lump Sum & Corpus": "एकरकमी रक्कम व कॉर्पस", "Pay Growth": "वेतन वाढ", "Cumulative (20 yrs)": "एकत्रित (20 वर्षे)", "Nominal vs Real Value": "नाममात्र विरुद्ध वास्तविक मूल्य", "NPS pension remains fixed; UPS pension grows annually with DA hikes.": "NPS पेन्शन स्थिर राहते; UPS पेन्शन DA वाढीबरोबर दरवर्षी वाढते.", "Nominal = future rupee amount · Real (PV) = equivalent purchasing power in today's rupees · Inflation-discounted using your entered rate.": "नाममात्र = भविष्यातील रुपयांतील रक्कम · वास्तविक (PV) = आजच्या रुपयांतील क्रयशक्ती · तुम्ही दिलेल्या महागाई दराने कमी केलेले मूल्य.", "Career & Pay Timeline": "सेवा व वेतन वेळरेषा", "Pay Progression Details": "वेतन प्रगतीचा तपशील", "Year": "वर्ष", "Event": "घटना", "Designation": "पदनाम", "Basic Pay (₹)": "मूळ वेतन (₹)", "Gross Pay (₹)": "एकूण वेतन (₹)", "Key Insights & Recommendations": "महत्त्वाचे निष्कर्ष व शिफारसी", "Disclaimer:": "अस्वीकरण:", "Projections are based on assumptions about future pay commissions, DA rates, and NPS returns. Actual benefits may vary. Future CPC fitment factors are estimated, not officially announced. Professor promotion is applied after completing specified years from joining, per UGC CAS norms. NPS corpus is market-linked. UPS availability depends on institution adoption. Consult your institution's finance cell and a certified financial advisor for official figures.": "भविष्यातील वेतन आयोग, DA दर आणि NPS परतावा याबाबतच्या गृहीतकांवर हे अंदाज आधारित आहेत. प्रत्यक्ष लाभ वेगळे असू शकतात. भविष्यातील आयोगांचे फिटमेंट फॅक्टर अंदाजित आहेत, अधिकृतपणे जाहीर झालेले नाहीत. UGC CAS नियमांनुसार, रुजू झाल्यापासून ठरावीक वर्षे पूर्ण झाल्यावर प्राध्यापक पदोन्नती गृहीत धरली आहे. NPS कॉर्पस बाजाराशी निगडित आहे. UPS ची उपलब्धता संस्थेने ती स्वीकारण्यावर अवलंबून आहे. अधिकृत आकडेवारीसाठी तुमच्या संस्थेच्या वित्त विभागाचा व प्रमाणित आर्थिक सल्लागाराचा सल्ला घ्या.", "← Recalculate": "← पुन्हा मोजा", "Higher Education Pension Calculator · UGC Pay Commission Reference Tool · 2025": "उच्च शिक्षण पेन्शन कॅल्क्युलेटर · UGC वेतन आयोग संदर्भ साधन · 2025"};
+const SKIP_SEL = '#careerTimeline,#payTable,#recommendations,#summaryChips,#winnerText,#winnerSub,#pvInsightText,#startingBasicHint,.lang-toggle,script,style';
+
+function applyLang() {
+  document.documentElement.lang = LANG;
+  document.title = L('Higher Education Pension Calculator', 'उच्च शिक्षण पेन्शन कॅल्क्युलेटर');
+  const w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+    acceptNode: n => (n.parentElement && n.parentElement.closest(SKIP_SEL)) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT
+  });
+  const nodes = []; while (w.nextNode()) nodes.push(w.currentNode);
+  nodes.forEach(n => {
+    if (n._en === undefined) {
+      const t = n.nodeValue.trim();
+      if (!t || !(t in MR_DICT)) return;
+      n._en = n.nodeValue;
+    }
+    const t = n._en.trim();
+    n.nodeValue = LANG === 'mr' ? n._en.replace(t, () => MR_DICT[t]) : n._en;
+  });
+  document.querySelectorAll('[placeholder]').forEach(el => {
+    if (el._enPh === undefined) el._enPh = el.getAttribute('placeholder');
+    el.setAttribute('placeholder', LANG === 'mr' && MR_DICT[el._enPh] ? MR_DICT[el._enPh] : el._enPh);
+  });
+  document.getElementById('langMr').classList.toggle('on', LANG === 'mr');
+  document.getElementById('langEn').classList.toggle('on', LANG === 'en');
+}
+
+function setLang(l) {
+  LANG = l;
+  try { localStorage.setItem('pensionLang', l); } catch (e) {}
+  applyLang();
+  updateStartingPayHint(false);
+  computeDerived();
+  if (document.getElementById('results').style.display === 'block') calculate(true);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  let saved = 'mr';
+  try { saved = localStorage.getItem('pensionLang') || 'mr'; } catch (e) {}
+  setLang(saved);
+});
+
 function fmt(n) {
-  if (n >= 10000000) return '₹' + (n/10000000).toFixed(2) + ' Cr';
-  if (n >= 100000)   return '₹' + (n/100000).toFixed(2) + ' L';
+  if (n >= 10000000) return '₹' + (n/10000000).toFixed(2) + L(' Cr',' कोटी');
+  if (n >= 100000)   return '₹' + (n/100000).toFixed(2) + L(' L',' लाख');
   return '₹' + Math.round(n).toLocaleString('en-IN');
 }
 function fmtFull(n) { return '₹' + Math.round(n).toLocaleString('en-IN'); }
@@ -362,44 +468,32 @@ function fmtFull(n) { return '₹' + Math.round(n).toLocaleString('en-IN'); }
 function computeDerived() {
   const dob = document.getElementById('dob').value;
   const joining = document.getElementById('joiningDate').value;
-  
-  if (joining) {
-    const jDate = new Date(joining);
-    const basicInput = document.getElementById('startingBasic');
-    const hint = document.getElementById('basicHint');
-    
-    // Auto-adjust starting pay based on 6th vs 7th CPC era joining
-    if (jDate < new Date('2016-04-01')) {
-      if (basicInput.value === '57700') basicInput.value = '21600';
-      hint.textContent = "6th CPC – Pay in PB + AGP (e.g. 21600)";
-    } else {
-      if (basicInput.value === '21600') basicInput.value = '57700';
-      hint.textContent = "Level 10 – Assistant Professor (7th CPC)";
-    }
-  }
-
   if (!dob) return;
   const dobD = new Date(dob);
   const retD = new Date(dobD); retD.setFullYear(retD.getFullYear() + 60);
-  document.getElementById('retirementDate').value = retD.toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'});
-  
+  document.getElementById('retirementDate').value = retD.toLocaleDateString(LOC(),{day:'2-digit',month:'long',year:'numeric'});
   if (joining) {
     const yrs = (retD - new Date(joining)) / (1000*60*60*24*365.25);
-    document.getElementById('totalService').value = yrs.toFixed(1) + ' years';
-    
-    // Calculate DA based on the last Pay Commission before retirement
-    const retYear = retD.getFullYear();
-    const cpc8y = parseInt(document.getElementById('cpc8year')?.value || 2026);
-    const cpc9y = parseInt(document.getElementById('cpc9year')?.value || 2036);
-    const cpc10y = parseInt(document.getElementById('cpc10year')?.value || 2046);
-    
-    let lastCpc = 2006; 
-    [2006, 2016, cpc8y, cpc9y, cpc10y].forEach(y => { 
-      if (retYear >= y) lastCpc = y; 
-    });
-    
-    const dg = parseFloat(document.getElementById('daGrowth').value || 6);
-    document.getElementById('daAtRetirement').value = Math.round(Math.max(0, retYear - lastCpc) * dg) + '%';
+    document.getElementById('totalService').value = yrs.toFixed(1) + L(' years',' वर्षे');
+
+    // Compute projected DA at retirement using CPC-reset model
+    const retYear  = retD.getFullYear();
+    const daG      = parseFloat(document.getElementById('daGrowth').value || 4);
+    const cpc8y    = parseInt(document.getElementById('cpc8year').value  || 2026);
+    const cpc9y    = parseInt(document.getElementById('cpc9year').value  || 2036);
+    const cpc10y   = parseInt(document.getElementById('cpc10year').value || 2046);
+
+    // Find latest CPC year that falls before or at retYear → that's the reset baseline
+    const allCpcs  = [2016, cpc8y, cpc9y, cpc10y].filter(y => y <= retYear);
+    const lastReset = allCpcs.length > 0 ? Math.max(...allCpcs) : 2016;
+    const yearsFromReset = Math.max(0, retYear - lastReset);
+    const projDA = Math.round(yearsFromReset * daG);
+
+    // Only auto-fill if user hasn't manually edited the field
+    const daField = document.getElementById('daAtRetirement');
+    if (!daField.dataset.manuallyEdited) {
+      daField.value = projDA;
+    }
   }
 }
 
@@ -410,6 +504,28 @@ function switchChart(e, id) {
   document.getElementById('panel-'+id).classList.add('active');
 }
 
+// Track when user manually edits DA field — stop auto-overwriting it
+document.addEventListener('DOMContentLoaded', () => {
+  const daField = document.getElementById('daAtRetirement');
+  daField.addEventListener('input', () => { daField.dataset.manuallyEdited = 'true'; });
+
+  // When user clears the field, re-enable auto-compute
+  daField.addEventListener('keydown', (e) => {
+    if (e.key === 'Delete' || e.key === 'Backspace') {
+      if (daField.value.length <= 1) {
+        delete daField.dataset.manuallyEdited;
+        computeDerived();
+      }
+    }
+  });
+
+  // Re-run derived when CPC years change (they affect DA reset points)
+  ['cpc8year','cpc9year','cpc10year','cpc8factor','cpc9factor','cpc10factor'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('change', computeDerived);
+  });
+});
+
 function mkChart(id, type, data, opts) {
   if (charts[id]) { charts[id].destroy(); }
   charts[id] = new Chart(document.getElementById(id), { type, data, options: opts });
@@ -418,29 +534,54 @@ function mkChart(id, type, data, opts) {
 const BASE_OPTS = (yLabel) => ({
   responsive: true, maintainAspectRatio: false,
   plugins: {
-    legend: { labels: { color:'#7a8099', font:{family:'DM Sans',size:12}, boxWidth:14, padding:20 } },
+    legend: { labels: { color:'#7a8099', font:{family:"'DM Sans','Noto Sans Devanagari',sans-serif",size:12}, boxWidth:14, padding:20 } },
     tooltip: {
       backgroundColor:'#1a1e27', borderColor:'#252a36', borderWidth:1,
       titleColor:'#e8e6e0', bodyColor:'#7a8099',
-      titleFont:{family:'DM Mono',size:12}, bodyFont:{family:'DM Sans',size:12},
+      titleFont:{family:"'DM Mono','Noto Sans Devanagari',monospace",size:12}, bodyFont:{family:"'DM Sans','Noto Sans Devanagari',sans-serif",size:12},
       callbacks:{ label: ctx => ' ' + ctx.dataset.label + ': ₹' + Math.round(ctx.parsed.y).toLocaleString('en-IN') }
     }
   },
   scales: {
-    x: { grid:{color:'rgba(37,42,54,.6)'}, ticks:{color:'#7a8099',font:{family:'DM Mono',size:11}} },
+    x: { grid:{color:'rgba(37,42,54,.6)'}, ticks:{color:'#7a8099',font:{family:"'DM Mono','Noto Sans Devanagari',monospace",size:11}} },
     y: {
       grid:{color:'rgba(37,42,54,.6)'},
-      ticks:{ color:'#7a8099', font:{family:'DM Mono',size:11},
-        callback: v => v>=100000 ? '₹'+(v/100000).toFixed(0)+'L' : '₹'+v.toLocaleString('en-IN') },
-      title: yLabel ? {display:true, text:yLabel, color:'#7a8099', font:{family:'DM Sans',size:12}} : {display:false}
+      ticks:{ color:'#7a8099', font:{family:"'DM Mono','Noto Sans Devanagari',monospace",size:11},
+        callback: v => v>=100000 ? '₹'+(v/100000).toFixed(0)+L('L',' लाख') : '₹'+v.toLocaleString('en-IN') },
+      title: yLabel ? {display:true, text:yLabel, color:'#7a8099', font:{family:"'DM Sans','Noto Sans Devanagari',sans-serif",size:12}} : {display:false}
     }
   }
 });
 
-function calculate() {
+
+function updateStartingPayHint(resetValue = true) {
+  const joining = document.getElementById('joiningDate').value;
+  const hint = document.getElementById('startingBasicHint');
+  const joinYear = joining ? new Date(joining).getFullYear() : null;
+  if (joinYear !== null && joinYear < 2016) {
+    hint.textContent = L('PB-3 + GP ₹6,000 – 6th CPC (Asst. Professor, pre-July 2016). Typical entry: ₹21,600',
+                         'PB-3 + ग्रेड पे ₹6,000 – 6 वा वेतन आयोग (सहायक प्राध्यापक, जुलै 2016 पूर्वी). सामान्य सुरुवात: ₹21,600');
+    if (resetValue) document.getElementById('startingBasic').value = 21600;
+  } else {
+    hint.textContent = L('Level 10 – 7th CPC (Asst. Professor, July 2016 onwards)',
+                         'स्तर 10 – 7 वा वेतन आयोग (सहायक प्राध्यापक, जुलै 2016 पासून)');
+    if (resetValue && joinYear !== null) document.getElementById('startingBasic').value = 57700;
+  }
+}
+
+// Also trigger hint on joining date change
+document.addEventListener('DOMContentLoaded', ()=>{
+  document.getElementById('joiningDate').addEventListener('change', ()=>{
+    computeDerived();
+    updateStartingPayHint(true);
+  });
+  document.getElementById('daGrowth').addEventListener('input', computeDerived);
+});
+
+function calculate(noScroll) {
   const jv = document.getElementById('joiningDate').value;
   const dv = document.getElementById('dob').value;
-  if (!jv || !dv) { alert('Please enter Joining Date and Date of Birth.'); return; }
+  if (!jv || !dv) { alert(L('Please enter Joining Date and Date of Birth.','कृपया सेवेत रुजू होण्याची तारीख व जन्मतारीख भरा.')); return; }
 
   const joinD = new Date(jv);
   const dobD  = new Date(dv);
@@ -451,9 +592,13 @@ function calculate() {
   const retYear  = retD.getFullYear();
   const todayY   = new Date().getFullYear();
 
-  const startBasic  = parseFloat(document.getElementById('startingBasic').value);
-  const assocYrs    = parseFloat(document.getElementById('assocPromoYrs').value);
-  const profYrs     = parseFloat(document.getElementById('profPromoYrs').value);
+  // ── Key policy cutoffs ──
+  const CPC7_YEAR  = 2016;  // 7th CPC effective July 1, 2016
+  const NPS14_YEAR = 2019;  // Employer contribution raised to 14% from April 1, 2019
+
+  const startBasic = parseFloat(document.getElementById('startingBasic').value);
+  const assocYrs   = parseFloat(document.getElementById('assocPromoYrs').value);
+  const profYrs    = parseFloat(document.getElementById('profPromoYrs').value);
 
   const cpc8y  = parseInt(document.getElementById('cpc8year').value);
   const cpc8f  = parseFloat(document.getElementById('cpc8factor').value);
@@ -463,173 +608,266 @@ function calculate() {
   const cpc10f = parseFloat(document.getElementById('cpc10factor').value);
   const daG    = parseFloat(document.getElementById('daGrowth').value);
 
-  const npsNow    = parseFloat(document.getElementById('npsCorpus').value)||0;
-  const npsRet    = parseFloat(document.getElementById('npsReturn').value)/100;
-  const empPct    = parseFloat(document.getElementById('npsEmpPct').value)/100;
-  const empRPct   = parseFloat(document.getElementById('npsEmpRPct').value)/100;
-  const annRate   = parseFloat(document.getElementById('annuityRate').value)/100;
-  const annPct    = parseFloat(document.getElementById('annuityPct').value)/100;
-  const inflation = parseFloat(document.getElementById('inflationRate').value)/100;
+  const npsNow     = parseFloat(document.getElementById('npsCorpus').value)||0;
+  const npsRet     = parseFloat(document.getElementById('npsReturn').value)/100;
+  const empPct     = parseFloat(document.getElementById('npsEmpPct').value)/100;
+  const empRold    = parseFloat(document.getElementById('npsEmpRPctOld').value)/100; // 10% pre-Apr 2019
+  const empRnew    = parseFloat(document.getElementById('npsEmpRPct').value)/100;    // 14% from Apr 2019
+  const annRate    = parseFloat(document.getElementById('annuityRate').value)/100;
+  const annPct     = parseFloat(document.getElementById('annuityPct').value)/100;
+  const fdOn       = document.getElementById('fdInvest').value === 'yes';
+  const fdRate     = (parseFloat(document.getElementById('fdRate').value) || 0)/100;
+  const inflation  = parseFloat(document.getElementById('inflationRate').value)/100;
 
-  // Promotion dates (from joining)
+  // ── 6th CPC UGC pay scales (Pay Band min + Grade Pay = effective basic) ──
+  // Asst. Prof:  PB-3 ₹15,600 + GP ₹6,000  → entry ₹21,600
+  // Assoc. Prof: PB-4 ₹37,400 + GP ₹9,000  → entry ₹46,400
+  // Professor:   PB-4 ₹37,400 + GP ₹10,000 → entry ₹47,400
+  const CPC6 = { asst:21600, assoc:46400, prof:47400 };
+  // Official UGC 7th CPC fitment factor = 2.67
+  const FITMENT_6TO7 = 2.67;
+
+  // Future Pay Commissions list (only 8th, 9th, 10th — post 7th)
+  const futureCpcs = [
+    {year:cpc8y,  factor:cpc8f,  name:'8th Pay Commission'},
+    {year:cpc9y,  factor:cpc9f,  name:'9th Pay Commission'},
+    {year:cpc10y, factor:cpc10f, name:'10th Pay Commission'}
+  ].filter(c => c.year >= joinYear && c.year <= retYear);
+
+  // ── DA model ──
+  // Rule: DA resets to ZERO at every Pay Commission implementation year.
+  // It then grows at daG% per year from that reset point.
+  // 7th CPC implemented Jan 2016 → DA reset to 0 in 2016.
+  // 8th CPC in cpc8y → DA reset to 0 again, and so on.
+  // For pre-7th CPC years: DA was ~125% at end of 6th CPC era (Jan 2016),
+  // accumulating at ~7%/yr going backwards from 2016.
+  //
+  // OVERRIDE: if user has manually typed a DA value for retirement year, we
+  // use that for the retirement row but still simulate intermediate years normally.
+  const manualRetDA = document.getElementById('daAtRetirement').value !== ''
+    ? parseFloat(document.getElementById('daAtRetirement').value)
+    : null;
+
+  // All CPC reset years (7th is always 2016, plus future CPCs in service)
+  const allCpcResetYears = [CPC7_YEAR, ...futureCpcs.map(c => c.year)].sort((a,b)=>a-b);
+
+  function daForYear(y) {
+    if (y < CPC7_YEAR) {
+      // 6th CPC era: DA was ~125% at Jan 2016, grew ~7%/yr before that
+      const yearsTo2016 = CPC7_YEAR - y;
+      return Math.max(0, Math.round(125 - yearsTo2016 * 7));
+    }
+    // Find the most recent CPC reset year at or before y
+    let baseYear = CPC7_YEAR;
+    allCpcResetYears.forEach(ry => { if (ry <= y) baseYear = Math.max(baseYear, ry); });
+    // DA grows from 0 at baseYear at daG% per year
+    const yearsFromReset = Math.max(0, y - baseYear);
+    return Math.round(yearsFromReset * daG);
+  }
+
+  // ── Promotion dates ──
   const assocDate = new Date(joinD); assocDate.setFullYear(assocDate.getFullYear()+Math.floor(assocYrs));
   const profDate  = new Date(joinD); profDate.setFullYear(profDate.getFullYear()+Math.floor(profYrs));
-
   const willAssoc = assocDate < retD;
   const willProf  = profDate < retD && profYrs > assocYrs;
 
-  const cpcs = [
-    {year:cpc8y, factor:cpc8f, name:'8th Pay Commission'},
-    {year:cpc9y, factor:cpc9f, name:'9th Pay Commission'},
-    {year:cpc10y,factor:cpc10f,name:'10th Pay Commission'}
-  ];
+  const joinedUnder6th = joinYear < CPC7_YEAR;
 
-  function daY(y) {
-    let lastCpcYear = 2006; 
-    [2006, 2016, cpc8y, cpc9y, cpc10y].forEach(cpcYr => {
-      if (y >= cpcYr) lastCpcYear = cpcYr;
-    });
-    return Math.round((y - lastCpcYear) * daG);
-  }
+  // ── Year-by-year simulation ──
+  let payHistory = [];
+  let curDesig = 'Assistant Professor';
+  let curBasic = startBasic;
+  let on7th    = !joinedUnder6th;   // true if already on 7th CPC
+  let futureCpcFactor = 1;          // tracks 8th/9th/10th applied so far
+  let dAssoc = false, dProf = false;
+  const usedCPCs = new Set();
+  let npsCorpusRunning = npsNow;
+  const mRet = npsRet / 12;
 
-  // ── Simulate year-by-year ──
-  let payHistory=[], curDesig='Assistant Professor', curBasic=startBasic;
-  let dAssoc=false, dProf=false;
-  let curCpc = joinD < new Date('2016-04-01') ? 6 : 7;
-  let cumulativeFactorPost7th = 1;
-  const usedCPCs=new Set();
+  for (let y = joinYear; y <= retYear; y++) {
+    const svc = y - joinYear;
+    let evType = 'normal', evLabel = '';
 
-  for (let y=joinYear; y<=retYear; y++) {
-    const svc = y-joinYear;
-    let evType='normal', evLabel='';
-
-    // 1. Annual Increment
-    if (svc > 0) {
-      curBasic *= (1 + INCR);
-      if (curCpc >= 7) curBasic = Math.round(curBasic / 100) * 100;
-      else curBasic = Math.round(curBasic / 10) * 10;
+    // ── Transition: 6th → 7th CPC (July 1, 2016) ──
+    if (!on7th && y === CPC7_YEAR) {
+      on7th = true;
+      // Fitted pay = current 6th CPC basic × 2.67; take max with 7th CPC entry
+      const desigEntry = curDesig==='Professor' ? UGC_PAY.prof
+                       : curDesig==='Associate Professor' ? UGC_PAY.assoc
+                       : UGC_PAY.asst;
+      curBasic = Math.max(curBasic * FITMENT_6TO7, desigEntry);
+      evType = 'cpc'; evLabel = '7th Pay Commission — Fitment 2.67×';
     }
 
-    // 2. Promotions (Effective July 1st)
+    // ── Promotions (checked after CPC transition so pay is in correct era) ──
     if (!dAssoc && willAssoc && svc >= assocYrs) {
       dAssoc = true; curDesig = 'Associate Professor';
-      let minPay = curCpc === 6 ? UGC_PAY_6TH.assoc : (UGC_PAY_7TH.assoc * cumulativeFactorPost7th);
-      if (curBasic < minPay) curBasic = minPay;
+      if (on7th) {
+        // 7th CPC entry for Assoc Prof × any future CPCs already applied
+        curBasic = UGC_PAY.assoc * futureCpcFactor;
+      } else {
+        curBasic = CPC6.assoc;
+      }
       evType = 'promo'; evLabel = 'Promoted: Associate Professor';
     }
-    
     if (!dProf && willProf && svc >= profYrs) {
       dProf = true; curDesig = 'Professor';
-      let minPay = curCpc === 6 ? UGC_PAY_6TH.prof : (UGC_PAY_7TH.prof * cumulativeFactorPost7th);
-      if (curBasic < minPay) curBasic = minPay;
-      evType = 'promo'; evLabel = (evLabel ? evLabel + ' & Professor' : 'Promoted: Professor');
+      if (on7th) {
+        curBasic = UGC_PAY.prof * futureCpcFactor;
+      } else {
+        curBasic = CPC6.prof;
+      }
+      evType = 'promo'; evLabel = 'Promoted: Professor';
     }
 
-    // 3. Pay Commissions (Effective 1st July)
-    if (y === 2016 && curCpc === 6) {
-      curCpc = 7;
-      curBasic *= 2.57; // 7th CPC standard fitment
-      curBasic = Math.round(curBasic / 100) * 100;
-      evType = 'cpc';
-      evLabel = evLabel ? evLabel + ' | 7th CPC (1st July)' : '7th Pay Commission (1st July)';
-    }
-
-    cpcs.forEach(c => {
-      if (y === c.year && !usedCPCs.has(c.year) && c.year > 2016 && c.year <= retYear) {
+    // ── Future Pay Commissions (8th, 9th, 10th) ──
+    futureCpcs.forEach(c => {
+      if (y === c.year && !usedCPCs.has(c.year)) {
         usedCPCs.add(c.year);
-        cumulativeFactorPost7th *= c.factor;
+        futureCpcFactor *= c.factor;
         curBasic *= c.factor;
-        curBasic = Math.round(curBasic / 100) * 100;
-        evType = 'cpc';
-        evLabel = evLabel ? evLabel + ` | ${c.name} (1st July)` : `${c.name} (1st July)`;
+        if (evType === 'normal') { evType = 'cpc'; evLabel = c.name; }
       }
     });
 
-    const da    = daY(y);
-    const gross = curBasic*(1+da/100);
-    const notable = evType!=='normal'||y===joinYear||y===retYear||y%5===0;
-    
+    // ── Annual increment (3% per UGC) ──
+    if (evType === 'normal' && svc > 0) curBasic *= (1 + INCR);
+
+    const da    = daForYear(y);
+    const gross = curBasic * (1 + da / 100);
+
+    // ── NPS corpus: year-by-year compounding with period-correct employer rate ──
+    // Employer contribution: 10% before 2019, 14% from 2019
+    const empR = y >= NPS14_YEAR ? empRnew : empRold;
+    const monthlyContrib = curBasic * (empPct + empR);
+    // Grow existing corpus for 1 year, then add 12 months of contributions
+    npsCorpusRunning *= (1 + npsRet);
+    if (mRet > 0) {
+      npsCorpusRunning += monthlyContrib * (Math.pow(1 + mRet, 12) - 1) / mRet;
+    } else {
+      npsCorpusRunning += monthlyContrib * 12;
+    }
+
+    const notable = evType !== 'normal' || y === joinYear || y === retYear || y % 5 === 0;
     if (notable) {
       payHistory.push({
-        year:y, event:evType,
-        label: evLabel||(y===retYear?'Retirement':y===joinYear?'Joined Service':'Service Year'),
-        designation:curDesig, basic:Math.round(curBasic), da, gross:Math.round(gross)
+        year: y, event: evType,
+        label: evLabel || (y===retYear?'Retirement': y===joinYear?'Joining':'Service Year'),
+        designation: curDesig,
+        basic: Math.round(curBasic), da, gross: Math.round(gross),
+        empR: Math.round(empR * 100),
+        cpcEra: on7th ? '7th+' : '6th'
       });
     }
   }
 
-  const retRow  = payHistory[payHistory.length-1];
-  const retBasic= retRow.basic;
-  const retDA   = retRow.da;
+  const retRow   = payHistory[payHistory.length - 1];
+  // Apply manual DA override for retirement year if user entered it
+  if (manualRetDA !== null) {
+    retRow.da    = manualRetDA;
+    retRow.gross = Math.round(retRow.basic * (1 + manualRetDA / 100));
+  }
+  const retBasic = retRow.basic;
+  const retDA    = retRow.da;
+  const yToR     = Math.max(0, (retD - new Date()) / (1000*60*60*24*365.25));
 
   // ── UPS ──
   const upsPension  = retBasic * 0.5;
-  const sixBlocks   = Math.floor(totalYrs*2);
-  const upsLumpsum  = (1/10)*retBasic*(1+retDA/100)*sixBlocks;
-  const upsGratuity = Math.min((15/26)*retBasic*Math.min(totalYrs,33), 2000000);
+  const sixBlocks   = Math.floor(totalYrs * 2);
+  const upsLumpsum  = (1/10) * retBasic * (1 + retDA/100) * sixBlocks;
+  const upsGratuity = Math.min((15/26) * retBasic * Math.min(totalYrs, 33), 2000000);
 
-  // ── NPS ──
-  const now  = new Date();
-  const yToR = Math.max(0,(retD-now)/(1000*60*60*24*365.25));
-  let corpus = npsNow * Math.pow(1+npsRet, yToR);
-  const avgBasic = (willProf?UGC_PAY_7TH.prof:willAssoc?UGC_PAY_7TH.assoc:UGC_PAY_7TH.asst) * Math.pow(cumulativeFactorPost7th,0.5);
-  const mContrib = avgBasic*(empPct+empRPct);
-  const mRet     = npsRet/12;
-  if (mRet>0 && yToR>0) {
-    const months = Math.round(yToR*12);
-    corpus += mContrib*(Math.pow(1+mRet,months)-1)/mRet;
-  } else { corpus += mContrib*yToR*12; }
+  // ── NPS final figures ──
+  const npsTotalCorpus    = npsCorpusRunning;
+  const npsAnnuityCorpus  = npsTotalCorpus * annPct;
+  const npsLumpsum        = npsTotalCorpus * (1 - annPct);
+  const npsAnnuityPension = (npsAnnuityCorpus * annRate) / 12;           // annuity only
+  const npsFdIncome       = fdOn ? (npsLumpsum * fdRate) / 12 : 0;        // FD interest on lump sum
+  const npsMonthlyPension = npsAnnuityPension + npsFdIncome;              // total monthly NPS income
+  const npsGratuity       = Math.min((15/26) * retBasic * Math.min(totalYrs, 33), 2000000);
 
-  const npsTotalCorpus    = corpus;
-  const npsAnnuityCorpus  = corpus*annPct;
-  const npsLumpsum        = corpus*(1-annPct);
-  const npsMonthlyPension = (npsAnnuityCorpus*annRate)/12;
-  const npsGratuity       = Math.min((15/26)*retBasic*Math.min(totalYrs,33),2000000);
+  // ── Maharashtra RNPS ──
+  // 20+ yrs service: 50% of last drawn basic (+ DA/dearness relief). 10–20 yrs: proportionate (service/20).
+  // Minimum ₹7,500/month after 10 yrs. <10 yrs: no pension. 60% of NPS corpus goes to Govt, 40% buys annuity
+  // (annuity is adjusted against the state's pension). Retirement gratuity applies. Family pension = 60%.
+  const RNPS_MIN = 7500;
+  const rnpsEligible = totalYrs >= 10;
+  const rnpsFactor   = totalYrs >= 20 ? 1 : totalYrs / 20;
+  const rnpsPension  = rnpsEligible ? Math.max(retBasic * 0.5 * rnpsFactor, RNPS_MIN) : 0;
+  const rnpsPensionDR = rnpsPension * (1 + retDA/100);
+  const rnpsGovtCorpus    = npsTotalCorpus * 0.6;
+  const rnpsAnnuityCorpus = npsTotalCorpus * 0.4;
+  const rnpsGratuity = npsGratuity;
+  const rnpsFamily   = rnpsPension * 0.6;
 
-  // Winner
-  const npsScore = npsMonthlyPension + npsLumpsum/120;
-  const upsScore = upsPension + (upsLumpsum+upsGratuity)/120;
-  const winner = upsScore>npsScore?'ups':'nps';
+  // ── Winner (all three include gratuity for a like-for-like score) ──
+  const npsScore  = npsMonthlyPension + (npsLumpsum + npsGratuity) / 120;
+  const upsScore  = upsPension + (upsLumpsum + upsGratuity) / 120;
+  const rnpsScore = rnpsPension + rnpsGratuity / 120;
+  const scores    = [{k:'NPS',v:npsScore},{k:'UPS',v:upsScore},{k:'RNPS',v:rnpsScore}].sort((a,b)=>b.v-a.v);
+  const winner    = scores[0].k;
 
   // ── Show results ──
-  document.getElementById('form-section').style.display='none';
-  document.getElementById('results').style.display='block';
-  document.getElementById('results').scrollIntoView({behavior:'smooth'});
+  document.getElementById('form-section').style.display = 'none';
+  document.getElementById('results').style.display = 'block';
+  if (!noScroll) document.getElementById('results').scrollIntoView({behavior:'smooth'});
 
-  document.getElementById('summaryChips').innerHTML=[
-    `<div class="chip">Service: <strong>${totalYrs.toFixed(1)} yrs</strong></div>`,
-    `<div class="chip">Retires: <strong>${retD.toLocaleDateString('en-IN',{month:'short',year:'numeric'})}</strong></div>`,
-    `<div class="chip">Last Basic: <strong>${fmt(retBasic)}</strong></div>`,
-    `<div class="chip">DA at Retirement: <strong>${retDA}%</strong></div>`,
-    `<div class="chip">Designation: <strong>${retRow.designation}</strong></div>`,
+  document.getElementById('summaryChips').innerHTML = [
+    `<div class="chip">${L('Service','सेवा')}: <strong>${totalYrs.toFixed(1)} ${L('yrs','वर्षे')}</strong></div>`,
+    `<div class="chip">${L('Retires','सेवानिवृत्ती')}: <strong>${retD.toLocaleDateString(LOC(),{month:'short',year:'numeric'})}</strong></div>`,
+    `<div class="chip">${L('Last Basic','शेवटचे मूळ वेतन')}: <strong>${fmt(retBasic)}</strong></div>`,
+    `<div class="chip">${L('DA at Retirement','सेवानिवृत्तीच्या वेळी DA')}: <strong>${retDA}%</strong></div>`,
+    `<div class="chip">${L('Designation','पदनाम')}: <strong>${dz(retRow.designation)}</strong></div>`,
+    `<div class="chip">${L('Pay Era at Joining','रुजू होतानाचा वेतन आयोग')}: <strong>${joinedUnder6th ? L('6th CPC','6 वा आयोग') : L('7th CPC','7 वा आयोग')}</strong></div>`,
   ].join('');
 
-  document.getElementById('winnerText').textContent = winner==='ups'
-    ? 'UPS Appears More Beneficial for You'
-    : 'NPS May Yield Higher Overall Returns';
-  document.getElementById('winnerSub').textContent = winner==='ups'
-    ? `UPS gives ${fmt(upsPension)}/month vs NPS ${fmt(npsMonthlyPension)}/month, with DA-linked growth.`
-    : `NPS corpus ${fmt(npsTotalCorpus)} yields ${fmt(npsMonthlyPension)}/month + ${fmt(npsLumpsum)} lump sum.`;
+  const winnerNames = {
+    NPS:  L('NPS (market-linked)', 'NPS (बाजाराशी निगडित)'),
+    UPS:  L('UPS (Unified Pension Scheme)', 'UPS (एकीकृत पेन्शन योजना)'),
+    RNPS: L('Maharashtra RNPS', 'महाराष्ट्र RNPS')
+  };
+  document.getElementById('winnerText').textContent = L(`${winnerNames[winner]} scores highest on the combined benefit measure`, `एकत्रित लाभाच्या मोजमापात ${winnerNames[winner]} सर्वाधिक ठरते`);
+  document.getElementById('winnerSub').textContent =
+    L(`Monthly: NPS ${fmt(npsMonthlyPension)} · UPS ${fmt(upsPension)} · RNPS ${fmt(rnpsPension)}. `, `मासिक: NPS ${fmt(npsMonthlyPension)} · UPS ${fmt(upsPension)} · RNPS ${fmt(rnpsPension)}. `) +
+    L(`Note: UPS is a Central Government scheme — Maharashtra state/aided-college staff should compare NPS with RNPS.`, `टीप: UPS ही केंद्र सरकारची योजना आहे — महाराष्ट्र राज्य/अनुदानित महाविद्यालयीन कर्मचाऱ्यांनी NPS ची तुलना RNPS शी करावी.`);
 
   document.getElementById('npsTotalCorpus').textContent    = fmt(npsTotalCorpus);
   document.getElementById('npsLumpsum').textContent        = fmt(npsLumpsum);
-  document.getElementById('npsMonthlyPension').textContent = `₹${Math.round(npsMonthlyPension).toLocaleString('en-IN')}/mo`;
-  document.getElementById('npsAnnuityNote').textContent    = `${Math.round(annPct*100)}% corpus (${fmt(npsAnnuityCorpus)}) annuitised @ ${Math.round(annRate*100)}%`;
+  document.getElementById('npsMonthlyPension').textContent = `₹${Math.round(npsMonthlyPension).toLocaleString('en-IN')}${MO()}`;
+  document.getElementById('npsAnnuityNote').textContent    = fdOn
+      ? L(`Annuity ₹${Math.round(npsAnnuityPension).toLocaleString('en-IN')} + FD interest ₹${Math.round(npsFdIncome).toLocaleString('en-IN')} (lump sum ${fmt(npsLumpsum)} @ ${(fdRate*100).toFixed(1)}%)`,
+          `ॲन्युइटी ₹${Math.round(npsAnnuityPension).toLocaleString('en-IN')} + FD व्याज ₹${Math.round(npsFdIncome).toLocaleString('en-IN')} (एकरकमी ${fmt(npsLumpsum)} @ ${(fdRate*100).toFixed(1)}%)`)
+      : L(`${Math.round(annPct*100)}% corpus (${fmt(npsAnnuityCorpus)}) annuitised @ ${Math.round(annRate*100)}%`,
+          `${Math.round(annPct*100)}% कॉर्पस (${fmt(npsAnnuityCorpus)}) ॲन्युइटीसाठी @ ${Math.round(annRate*100)}%`);
   document.getElementById('npsGratuity').textContent       = fmt(npsGratuity);
-  document.getElementById('upsMonthlyPension').textContent = `₹${Math.round(upsPension).toLocaleString('en-IN')}/mo`;
+  document.getElementById('upsMonthlyPension').textContent = `₹${Math.round(upsPension).toLocaleString('en-IN')}${MO()}`;
   document.getElementById('upsLumpsum').textContent        = fmt(upsLumpsum);
   document.getElementById('upsGratuity').textContent       = fmt(upsGratuity);
 
-  // ── PRESENT VALUE CALCULATIONS ──
-  const pvFactor = 1 / Math.pow(1 + inflation, yToR);
+  // RNPS card
+  document.getElementById('rnpsPension').textContent = rnpsEligible ? `₹${Math.round(rnpsPension).toLocaleString('en-IN')}${MO()}` : L('Not eligible','पात्र नाही');
+  document.getElementById('rnpsPensionNote').textContent = !rnpsEligible
+    ? L('Less than 10 years of service — no assured pension under RNPS','10 वर्षांपेक्षा कमी सेवा — RNPS अंतर्गत निश्चित पेन्शन नाही')
+    : totalYrs >= 20
+      ? L('50% of last drawn basic (20+ years of service)','शेवटच्या मूळ वेतनाच्या 50% (20+ वर्षे सेवा)')
+      : L(`Proportionate: 50% × ${totalYrs.toFixed(1)}/20 yrs of last basic${rnpsPension===RNPS_MIN?' (minimum ₹7,500 applied)':''}`,
+          `प्रमाणशीर: शेवटच्या मूळ वेतनाच्या 50% × ${totalYrs.toFixed(1)}/20 वर्षे${rnpsPension===RNPS_MIN?' (किमान ₹7,500 लागू)':''}`);
+  document.getElementById('rnpsPensionDR').textContent = rnpsEligible ? `₹${Math.round(rnpsPensionDR).toLocaleString('en-IN')}${MO()}` : '—';
+  document.getElementById('rnpsCorpusSplit').textContent = L(`${fmt(rnpsGovtCorpus)} to Govt · ${fmt(rnpsAnnuityCorpus)} annuity`, `${fmt(rnpsGovtCorpus)} शासनाकडे · ${fmt(rnpsAnnuityCorpus)} ॲन्युइटी`);
+  document.getElementById('rnpsGratuity').textContent = fmt(rnpsGratuity);
+  document.getElementById('rnpsFamily').textContent = rnpsEligible ? `₹${Math.round(rnpsFamily).toLocaleString('en-IN')}/mo` : '—';
 
-  const pvNpsCorpus   = npsTotalCorpus   * pvFactor;
-  const pvNpsLumpsum  = npsLumpsum       * pvFactor;
-  const pvNpsPension  = npsMonthlyPension* pvFactor;
-  const pvNpsGratuity = npsGratuity      * pvFactor;
-  const pvUpsPension  = upsPension       * pvFactor;
-  const pvUpsLumpsum  = upsLumpsum       * pvFactor;
-  const pvUpsGratuity = upsGratuity      * pvFactor;
+  // ── Present Value ──
+  const pvFactor      = 1 / Math.pow(1 + inflation, yToR);
+  const pvNpsCorpus   = npsTotalCorpus    * pvFactor;
+  const pvNpsLumpsum  = npsLumpsum        * pvFactor;
+  const pvNpsPension  = npsMonthlyPension * pvFactor;
+  const pvNpsGratuity = npsGratuity       * pvFactor;
+  const pvUpsPension  = upsPension        * pvFactor;
+  const pvUpsLumpsum  = upsLumpsum        * pvFactor;
+  const pvUpsGratuity = upsGratuity       * pvFactor;
+  const pvRnpsPension = rnpsPension       * pvFactor;
+  const pvRnpsGratuity= rnpsGratuity      * pvFactor;
 
   document.getElementById('pvNpsCorpus').textContent   = fmt(pvNpsCorpus);
   document.getElementById('pvNpsLumpsum').textContent  = fmt(pvNpsLumpsum);
@@ -638,177 +876,177 @@ function calculate() {
   document.getElementById('pvUpsPension').textContent  = fmt(pvUpsPension);
   document.getElementById('pvUpsLumpsum').textContent  = fmt(pvUpsLumpsum);
   document.getElementById('pvUpsGratuity').textContent = fmt(pvUpsGratuity);
+  document.getElementById('pvRnpsPension').textContent  = fmt(pvRnpsPension);
+  document.getElementById('pvRnpsGratuity').textContent = fmt(pvRnpsGratuity);
 
-  // PV Insight banner
   const pvBanner = document.getElementById('pvInsightBanner');
   pvBanner.style.display = 'block';
   document.getElementById('pvInsightText').innerHTML =
-    `Because things get more expensive over time, the money you receive at retirement won't buy as much as it does right now. Assuming an average inflation rate of <strong style="color:var(--text)">${Math.round(inflation*100)}% per year</strong> over the next <strong style="color:var(--text)">${yToR.toFixed(1)} years</strong>:<br><br>` +
-    `• Your projected NPS corpus of <strong style="color:var(--nps)">${fmt(npsTotalCorpus)}</strong> will have the same buying power as <strong style="color:var(--accent3)">${fmt(pvNpsCorpus)}</strong> does today.<br>` +
-    `• Your starting UPS pension of <strong style="color:var(--ups)">${fmt(upsPension)}/month</strong> will feel like <strong style="color:var(--accent3)">${fmt(pvUpsPension)}/month</strong> in today's pocket.<br><br>` +
-    `<em style="color:var(--muted)">Good to know: The UPS pension grows over time with DA hikes, which helps protect your purchasing power during retirement, unlike the fixed NPS annuity.</em>`;
+    L(`At <strong style="color:var(--text)">${Math.round(inflation*100)}% inflation</strong> over <strong style="color:var(--text)">${yToR.toFixed(1)} years</strong>, `,
+      `<strong style="color:var(--text)">${yToR.toFixed(1)} वर्षांत</strong> <strong style="color:var(--text)">${Math.round(inflation*100)}% महागाई</strong> गृहीत धरल्यास, `) +
+    L(`₹1 at retirement = <strong style="color:var(--accent3)">₹${pvFactor.toFixed(3)}</strong> today. `,
+      `सेवानिवृत्तीच्या वेळचा ₹1 = आजचे <strong style="color:var(--accent3)">₹${pvFactor.toFixed(3)}</strong>. `) +
+    L(`NPS corpus <strong style="color:var(--nps)">${fmt(npsTotalCorpus)}</strong> → <strong style="color:var(--accent3)">${fmt(pvNpsCorpus)}</strong> in today's money. `,
+      `NPS कॉर्पस <strong style="color:var(--nps)">${fmt(npsTotalCorpus)}</strong> → आजच्या मूल्यात <strong style="color:var(--accent3)">${fmt(pvNpsCorpus)}</strong>. `) +
+    L(`UPS pension <strong style="color:var(--ups)">${fmt(upsPension)}/mo</strong> → <strong style="color:var(--accent3)">${fmt(pvUpsPension)}/mo</strong> purchasing power today. `,
+      `UPS पेन्शन <strong style="color:var(--ups)">${fmt(upsPension)}${MO()}</strong> → आजची क्रयशक्ती <strong style="color:var(--accent3)">${fmt(pvUpsPension)}${MO()}</strong>. `) +
+    L(`RNPS pension <strong style="color:var(--rnps)">${fmt(rnpsPension)}/mo</strong> → <strong style="color:var(--accent3)">${fmt(pvRnpsPension)}/mo</strong>.`,
+      `RNPS पेन्शन <strong style="color:var(--rnps)">${fmt(rnpsPension)}${MO()}</strong> → <strong style="color:var(--accent3)">${fmt(pvRnpsPension)}${MO()}</strong>.`) +
+    (joinedUnder6th ? `<br><em style="color:var(--muted)">📌 ${L('6th CPC pay applied from joining through June 2016. 7th CPC fitment 2.67× applied from July 1, 2016.','रुजू झाल्यापासून जून 2016 पर्यंत 6 व्या आयोगाचे वेतन लागू. 1 जुलै 2016 पासून 7 व्या आयोगाचा 2.67× फिटमेंट लागू.')}</em>` : '') +
+    `<br><em style="color:var(--muted)">📌 ${L(`NPS employer contribution: ${Math.round(empRold*100)}% until March 2019, raised to ${Math.round(empRnew*100)}% from April 1, 2019 — applied year-by-year in corpus calculation.`,`NPS नियोक्ता अंशदान: मार्च 2019 पर्यंत ${Math.round(empRold*100)}%, 1 एप्रिल 2019 पासून ${Math.round(empRnew*100)}% — कॉर्पस गणनेत वर्षानुसार लागू केले.`)}</em>`;
 
-  // ══ RENDER CHARTS ══
-  setTimeout(()=>{
-
-    // 1. Monthly Pension — Grouped Bar
+  // ══ CHARTS ══
+  setTimeout(() => {
     mkChart('chartMonthly','bar',{
-      labels:['Monthly Pension Comparison'],
+      labels:[L('Monthly Pension','मासिक पेन्शन')],
       datasets:[
-        { label:'NPS Monthly Pension', data:[Math.round(npsMonthlyPension)], backgroundColor:'rgba(126,184,212,.75)', borderColor:'#7eb8d4', borderWidth:2, borderRadius:10 },
-        { label:'UPS Monthly Pension', data:[Math.round(upsPension)], backgroundColor:'rgba(201,168,76,.75)', borderColor:'#c9a84c', borderWidth:2, borderRadius:10 },
+        {label:L('NPS Monthly (Annuity + FD)','NPS मासिक (ॲन्युइटी + FD)'), data:[Math.round(npsMonthlyPension)], backgroundColor:'rgba(126,184,212,.75)', borderColor:'#7eb8d4', borderWidth:2, borderRadius:10},
+        {label:L('UPS Monthly Pension','UPS मासिक पेन्शन'), data:[Math.round(upsPension)],        backgroundColor:'rgba(201,168,76,.75)',  borderColor:'#c9a84c', borderWidth:2, borderRadius:10},
+        {label:L('RNPS Monthly Pension (Maharashtra)','RNPS मासिक पेन्शन (महाराष्ट्र)'), data:[Math.round(rnpsPension)], backgroundColor:'rgba(195,155,211,.75)', borderColor:'#c39bd3', borderWidth:2, borderRadius:10},
       ]
-    }, BASE_OPTS('Monthly Pension (₹)'));
+    }, BASE_OPTS(L('Monthly Pension (₹)','मासिक पेन्शन (₹)')));
 
-    // 2. Lump Sum & Corpus — Horizontal Bar
     mkChart('chartLumpsum','bar',{
-      labels:['NPS Total Corpus','NPS Lump Sum (60%)','NPS Gratuity','UPS Lump Sum','UPS Gratuity'],
+      labels:[L('NPS Corpus','NPS कॉर्पस'),L('NPS Lump Sum','NPS एकरकमी'),L('NPS Gratuity','NPS उपदान'),L('UPS Lump Sum','UPS एकरकमी'),L('UPS Gratuity','UPS उपदान'),L('RNPS Gratuity','RNPS उपदान')],
       datasets:[{
-        label:'Amount (₹)',
-        data:[Math.round(npsTotalCorpus),Math.round(npsLumpsum),Math.round(npsGratuity),Math.round(upsLumpsum),Math.round(upsGratuity)],
-        backgroundColor:['rgba(126,184,212,.8)','rgba(126,184,212,.5)','rgba(111,207,151,.6)','rgba(201,168,76,.8)','rgba(201,168,76,.5)'],
-        borderColor:['#7eb8d4','#7eb8d4','#6fcf97','#c9a84c','#c9a84c'],
+        label:L('Amount (₹)','रक्कम (₹)'),
+        data:[Math.round(npsTotalCorpus),Math.round(npsLumpsum),Math.round(npsGratuity),Math.round(upsLumpsum),Math.round(upsGratuity),Math.round(rnpsGratuity)],
+        backgroundColor:['rgba(126,184,212,.8)','rgba(126,184,212,.5)','rgba(111,207,151,.6)','rgba(201,168,76,.8)','rgba(201,168,76,.5)','rgba(195,155,211,.7)'],
+        borderColor:['#7eb8d4','#7eb8d4','#6fcf97','#c9a84c','#c9a84c','#c39bd3'],
         borderWidth:2, borderRadius:8,
       }]
-    },{
-      ...BASE_OPTS('Amount (₹)'),
-      plugins:{
-        legend:{display:false},
-        tooltip:{
-          backgroundColor:'#1a1e27',borderColor:'#252a36',borderWidth:1,
-          titleColor:'#e8e6e0',bodyColor:'#7a8099',
-          callbacks:{label:ctx=>' ₹'+Math.round(ctx.parsed.y).toLocaleString('en-IN')}
-        }
-      }
-    });
+    },{...BASE_OPTS(L('Amount (₹)','रक्कम (₹)')), plugins:{legend:{display:false}, tooltip:{backgroundColor:'#1a1e27',borderColor:'#252a36',borderWidth:1,titleColor:'#e8e6e0',bodyColor:'#7a8099',callbacks:{label:ctx=>' ₹'+Math.round(ctx.parsed.y).toLocaleString('en-IN')}}}});
 
-    // 3. Pay Growth — Line
-    const pgL = payHistory.map(r=>r.year);
-    const pgB = payHistory.map(r=>r.basic);
-    const pgG = payHistory.map(r=>r.gross);
     mkChart('chartPaygrowth','line',{
-      labels:pgL,
+      labels: payHistory.map(r=>r.year),
       datasets:[
-        { label:'Basic Pay', data:pgB, borderColor:'#c9a84c', backgroundColor:'rgba(201,168,76,.07)', fill:true, tension:0.35, pointBackgroundColor:'#c9a84c', pointRadius:4, pointHoverRadius:7, borderWidth:2.5 },
-        { label:'Gross Pay (Basic + DA)', data:pgG, borderColor:'#7eb8d4', backgroundColor:'rgba(126,184,212,.06)', fill:true, tension:0.35, pointBackgroundColor:'#7eb8d4', pointRadius:4, pointHoverRadius:7, borderWidth:2.5 },
+        {label:L('Basic Pay','मूळ वेतन'),             data:payHistory.map(r=>r.basic), borderColor:'#c9a84c', backgroundColor:'rgba(201,168,76,.07)', fill:true, tension:0.35, pointBackgroundColor:'#c9a84c', pointRadius:4, pointHoverRadius:7, borderWidth:2.5},
+        {label:L('Gross Pay (Basic+DA)','एकूण वेतन (मूळ+DA)'),  data:payHistory.map(r=>r.gross), borderColor:'#7eb8d4', backgroundColor:'rgba(126,184,212,.06)', fill:true, tension:0.35, pointBackgroundColor:'#7eb8d4', pointRadius:4, pointHoverRadius:7, borderWidth:2.5},
       ]
-    }, BASE_OPTS('Pay (₹)'));
+    }, BASE_OPTS(L('Pay (₹)','वेतन (₹)')));
 
-    // 4. Cumulative Pension over 20 years
-    const cumLbls = Array.from({length:21},(_,i)=>'Yr '+i);
-    let cNPS=0, cUPS=0, currentUpsBasic = upsPension;
-    const dNPS=[0], dUPS=[0];
-    const allFutureCpcs = [{y: cpc8y, f: cpc8f}, {y: cpc9y, f: cpc9f}, {y: cpc10y, f: cpc10f}];
-
-    for (let i=1;i<=20;i++){
-      let currentYr = retYear + i - 1;
-      
-      allFutureCpcs.forEach(c => {
-        if (currentYr === c.y && currentYr > retYear) {
-           currentUpsBasic *= c.f;
-        }
-      });
-      
-      let currentDaPct = daY(currentYr);
-      let yrUpsPension = currentUpsBasic * (1 + currentDaPct/100);
-
-      cNPS += npsMonthlyPension*12;
-      cUPS += yrUpsPension*12;
-      dNPS.push(Math.round(cNPS));
-      dUPS.push(Math.round(cUPS));
+    const cumLbls = Array.from({length:21},(_,i)=>L('Yr ','वर्ष ')+i);
+    let cNPS=0, cUPS=0, cRNPS=0, upsMo=upsPension, rnpsMo=rnpsPension; const dNPS=[0], dUPS=[0], dRNPS=[0];
+    for(let i=1;i<=20;i++){
+      cNPS+=npsMonthlyPension*12; cUPS+=upsMo*12; cRNPS+=rnpsMo*12; upsMo*=(1+daG/100); rnpsMo*=(1+daG/100);
+      dNPS.push(Math.round(cNPS)); dUPS.push(Math.round(cUPS)); dRNPS.push(Math.round(cRNPS));
     }
-    
     mkChart('chartCumulative','line',{
       labels:cumLbls,
       datasets:[
-        { label:'NPS Cumulative', data:dNPS, borderColor:'#7eb8d4', backgroundColor:'rgba(126,184,212,.08)', fill:true, tension:0.3, pointBackgroundColor:'#7eb8d4', pointRadius:3, borderWidth:2.5 },
-        { label:'UPS Cumulative', data:dUPS, borderColor:'#c9a84c', backgroundColor:'rgba(201,168,76,.08)', fill:true, tension:0.3, pointBackgroundColor:'#c9a84c', pointRadius:3, borderWidth:2.5 },
+        {label:L('NPS Cumulative','NPS एकत्रित'), data:dNPS, borderColor:'#7eb8d4', backgroundColor:'rgba(126,184,212,.08)', fill:true, tension:0.3, pointBackgroundColor:'#7eb8d4', pointRadius:3, borderWidth:2.5},
+        {label:L('UPS Cumulative','UPS एकत्रित'), data:dUPS, borderColor:'#c9a84c', backgroundColor:'rgba(201,168,76,.08)',  fill:true, tension:0.3, pointBackgroundColor:'#c9a84c', pointRadius:3, borderWidth:2.5},
+        {label:L('RNPS Cumulative','RNPS एकत्रित'), data:dRNPS, borderColor:'#c39bd3', backgroundColor:'rgba(195,155,211,.08)', fill:true, tension:0.3, pointBackgroundColor:'#c39bd3', pointRadius:3, borderWidth:2.5},
       ]
-    }, BASE_OPTS('Total Pension Received (₹)'));
+    }, BASE_OPTS(L('Total Pension Received (₹)','मिळालेली एकूण पेन्शन (₹)')));
 
-    // 5. Nominal vs Real (PV) grouped bar
-    const pvLabels = ['NPS Corpus','NPS Lump Sum','NPS Monthly ×12','NPS Gratuity','UPS Monthly ×12','UPS Lump Sum','UPS Gratuity'];
-    const nominals = [npsTotalCorpus, npsLumpsum, npsMonthlyPension*12, npsGratuity, upsPension*12, upsLumpsum, upsGratuity];
-    const pvs      = [pvNpsCorpus,    pvNpsLumpsum, pvNpsPension*12,    pvNpsGratuity, pvUpsPension*12, pvUpsLumpsum, pvUpsGratuity];
+    const pvNominals = [npsTotalCorpus,npsLumpsum,npsMonthlyPension*12,npsGratuity,upsPension*12,upsLumpsum,upsGratuity,rnpsPension*12,rnpsGratuity];
+    const pvReals    = [pvNpsCorpus,pvNpsLumpsum,pvNpsPension*12,pvNpsGratuity,pvUpsPension*12,pvUpsLumpsum,pvUpsGratuity,pvRnpsPension*12,pvRnpsGratuity];
     mkChart('chartPvcompare','bar',{
-      labels: pvLabels,
+      labels:[L('NPS Corpus','NPS कॉर्पस'),L('NPS Lump Sum','NPS एकरकमी'),L('NPS Monthly×12','NPS मासिक×12'),L('NPS Gratuity','NPS उपदान'),L('UPS Monthly×12','UPS मासिक×12'),L('UPS Lump Sum','UPS एकरकमी'),L('UPS Gratuity','UPS उपदान'),L('RNPS Monthly×12','RNPS मासिक×12'),L('RNPS Gratuity','RNPS उपदान')],
       datasets:[
-        { label:'Nominal (Future ₹)', data:nominals.map(Math.round), backgroundColor:'rgba(126,184,212,.5)', borderColor:'#7eb8d4', borderWidth:2, borderRadius:6 },
-        { label:`Real Value (PV @ ${Math.round(inflation*100)}% inflation)`, data:pvs.map(Math.round), backgroundColor:'rgba(201,168,76,.6)', borderColor:'#c9a84c', borderWidth:2, borderRadius:6 },
+        {label:L('Nominal (Future ₹)','नाममात्र (भविष्यातील ₹)'),  data:pvNominals.map(Math.round), backgroundColor:'rgba(126,184,212,.5)', borderColor:'#7eb8d4', borderWidth:2, borderRadius:6},
+        {label:L(`Real PV @ ${Math.round(inflation*100)}% inflation`,`वास्तविक PV @ ${Math.round(inflation*100)}% महागाई`), data:pvReals.map(Math.round), backgroundColor:'rgba(201,168,76,.6)', borderColor:'#c9a84c', borderWidth:2, borderRadius:6},
       ]
-    }, {
-      ...BASE_OPTS('Amount (₹)'),
-      plugins: {
-        legend:{ labels:{ color:'#7a8099', font:{family:'DM Sans',size:12}, boxWidth:14, padding:20 } },
-        tooltip:{
-          backgroundColor:'#1a1e27', borderColor:'#252a36', borderWidth:1,
-          titleColor:'#e8e6e0', bodyColor:'#7a8099',
-          titleFont:{family:'DM Mono',size:11}, bodyFont:{family:'DM Sans',size:12},
-          callbacks:{ label: ctx => ' '+ctx.dataset.label+': ₹'+Math.round(ctx.parsed.y).toLocaleString('en-IN') }
-        }
-      }
-    });
-
+    },{...BASE_OPTS(L('Amount (₹)','रक्कम (₹)')), plugins:{legend:{labels:{color:'#7a8099',font:{family:"'DM Sans','Noto Sans Devanagari',sans-serif",size:12},boxWidth:14,padding:20}}, tooltip:{backgroundColor:'#1a1e27',borderColor:'#252a36',borderWidth:1,titleColor:'#e8e6e0',bodyColor:'#7a8099',titleFont:{family:"'DM Mono','Noto Sans Devanagari',monospace",size:11},bodyFont:{family:"'DM Sans','Noto Sans Devanagari',sans-serif",size:12},callbacks:{label:ctx=>' '+ctx.dataset.label+': ₹'+Math.round(ctx.parsed.y).toLocaleString('en-IN')}}}});
   }, 120);
 
-  // ── Timeline ──
-  const tlEv=[
-    {year:joinYear, label:'Joined Service', detail:`Assistant Professor · Basic: ${fmt(startBasic)}`, type:'join'},
-    ...(willAssoc?[{year:assocDate.getFullYear(), label:'Promoted: Associate Professor', detail:`After ${assocYrs} years from joining`, type:'promo'}]:[]),
-    ...(willProf ?[{year:profDate.getFullYear(),  label:'Promoted: Professor',           detail:`After ${profYrs} years from joining`,  type:'promo'}]:[]),
-    ...(joinD < new Date('2016-04-01') ? [{year:2016, label:'7th Pay Commission Applied', detail:`Effective 1st July 2016 · Fitment Factor: 2.57×`, type:'cpc'}] : []),
-    ...cpcs.filter(c=>c.year<=retYear && c.year > 2016).map(c=>({year:c.year, label:c.name+' Applied', detail:`Effective 1st July ${c.year} · Fitment Factor: ${c.factor}×`, type:'cpc'})),
-    {year:retYear, label:'Retirement', detail:`Last Basic: ${fmt(retBasic)} · ${retRow.designation} · ${totalYrs.toFixed(0)} years of service`, type:'retire'},
+  // ── Career Timeline ──
+  const tlEv = [
+    {year:joinYear, label:L('Joined Service','सेवेत रुजू'),
+     detail:`${joinedUnder6th?L('6th CPC','6 वा आयोग'):L('7th CPC','7 वा आयोग')} · ${dz('Assistant Professor')} · ${L('Basic','मूळ वेतन')}: ${fmt(startBasic)}${joinedUnder6th?` (PB-3 + ${L('GP','ग्रेड पे')} ₹6,000)`:` (${L('Level','स्तर')} 10)`}`, type:'join'},
+    ...(joinedUnder6th && CPC7_YEAR <= retYear
+      ? [{year:CPC7_YEAR, label:L('7th Pay Commission — UGC','7 वा वेतन आयोग — UGC'),
+          detail:L('Fitment 2.67× on 6th CPC basic. Pay matrix effective July 1, 2016. DA reset to 0%.','6 व्या आयोगाच्या मूळ वेतनावर 2.67× फिटमेंट. वेतन मॅट्रिक्स 1 जुलै 2016 पासून लागू. DA शून्य.'), type:'cpc'}] : []),
+    ...(joinYear <= NPS14_YEAR && retYear >= NPS14_YEAR
+      ? [{year:NPS14_YEAR, label:L('NPS Employer Contribution Revised','NPS नियोक्ता अंशदान सुधारित'),
+          detail:L(`Raised from ${Math.round(empRold*100)}% → ${Math.round(empRnew*100)}% w.e.f. April 1, 2019`,`1 एप्रिल 2019 पासून ${Math.round(empRold*100)}% वरून ${Math.round(empRnew*100)}% केले`), type:'nps'}] : []),
+    ...(willAssoc ? [{year:assocDate.getFullYear(), label:evl('Promoted: Associate Professor'),
+      detail:L(`After ${assocYrs} yrs · ${assocDate.getFullYear()<CPC7_YEAR?'PB-4 + GP ₹9,000 (6th CPC)':'Level 13A (7th CPC)'} · Entry basic: ${fmt(assocDate.getFullYear()<CPC7_YEAR?CPC6.assoc:UGC_PAY.assoc)}`,
+               `${assocYrs} वर्षांनंतर · ${assocDate.getFullYear()<CPC7_YEAR?'PB-4 + ग्रेड पे ₹9,000 (6 वा आयोग)':'स्तर 13A (7 वा आयोग)'} · सुरुवातीचे मूळ वेतन: ${fmt(assocDate.getFullYear()<CPC7_YEAR?CPC6.assoc:UGC_PAY.assoc)}`), type:'promo'}] : []),
+    ...(willProf  ? [{year:profDate.getFullYear(),  label:evl('Promoted: Professor'),
+      detail:L(`After ${profYrs} yrs · ${profDate.getFullYear()<CPC7_YEAR?'PB-4 + GP ₹10,000 (6th CPC)':'Level 14 (7th CPC)'} · Entry basic: ${fmt(profDate.getFullYear()<CPC7_YEAR?CPC6.prof:UGC_PAY.prof)}`,
+               `${profYrs} वर्षांनंतर · ${profDate.getFullYear()<CPC7_YEAR?'PB-4 + ग्रेड पे ₹10,000 (6 वा आयोग)':'स्तर 14 (7 वा आयोग)'} · सुरुवातीचे मूळ वेतन: ${fmt(profDate.getFullYear()<CPC7_YEAR?CPC6.prof:UGC_PAY.prof)}`), type:'promo'}] : []),
+    ...futureCpcs.filter(c=>c.year<=retYear).map(c=>({year:c.year, label:evl(c.name),
+      detail:L(`Fitment ${c.factor}× · Pay scales revised. DA reset to 0%.`,`फिटमेंट ${c.factor}× · वेतनश्रेणी सुधारित. DA शून्य.`), type:'cpc'})),
+    {year:retYear, label:evl('Retirement'),
+      detail:L(`Last Basic: ${fmt(retBasic)} · ${retRow.designation} · ${totalYrs.toFixed(0)} years service`,`शेवटचे मूळ वेतन: ${fmt(retBasic)} · ${dz(retRow.designation)} · ${totalYrs.toFixed(0)} वर्षे सेवा`), type:'retire'},
   ].sort((a,b)=>a.year-b.year);
 
-  document.getElementById('careerTimeline').innerHTML=tlEv.map(e=>`
-    <div class="timeline-item">
-      <div class="timeline-year">${e.year}</div>
+  document.getElementById('careerTimeline').innerHTML = tlEv.map(e => `
+    <div class="timeline-item" style="${e.type==='nps'?'border-color:rgba(126,184,212,.3);':e.type==='cpc'?'border-color:rgba(201,168,76,.2);':''}">
+      <div class="timeline-year" style="color:${e.type==='nps'?'var(--nps)':'var(--accent)'}">${e.year}</div>
       <div class="timeline-event">${e.label}</div>
       <div class="timeline-detail">${e.detail}</div>
     </div>`).join('');
 
-  // ── Pay Table ──
-  document.getElementById('payTable').innerHTML=payHistory.map(row=>{
-    let tag='';
-    if(row.event==='join')   tag=`<span class="tag join">Joining</span>`;
-    else if(row.event==='promo') tag=`<span class="tag promo">Promotion</span>`;
-    else if(row.event==='cpc')   tag=`<span class="tag paycomm">Pay Comm.</span>`;
-    else if(row.label==='Retirement') tag=`<span class="tag retire">Retirement</span>`;
+  // ── Pay Table (with CPC era + employer NPS % column) ──
+  document.getElementById('payTable').innerHTML = payHistory.map(row => {
+    let tag = '';
+    const cpcName = row.label.includes('7th') ? L('7th CPC','7 वा आयोग') : row.label.includes('8th') ? L('8th CPC','8 वा आयोग') : row.label.includes('9th') ? L('9th CPC','9 वा आयोग') : L('Pay Comm.','वेतन आयोग');
+    if(row.event==='join')   tag=`<span class="tag join">${L('Joining','रुजू')}</span>`;
+    else if(row.event==='promo') tag=`<span class="tag promo">${L('Promotion','पदोन्नती')}</span>`;
+    else if(row.event==='cpc')   tag=`<span class="tag paycomm">${cpcName}</span>`;
+    else if(row.label==='Retirement') tag=`<span class="tag retire">${L('Retirement','सेवानिवृत्ती')}</span>`;
+    const eraTag = row.cpcEra==='6th'
+      ? `<span style="font-size:10px;background:rgba(111,207,151,.12);color:var(--accent3);padding:1px 6px;border-radius:4px;margin-left:4px;">${L('6th CPC','6 वा आयोग')}</span>`
+      : '';
+    const npsNote = `<span style="font-size:10px;color:var(--muted);margin-left:4px;">${L('Emp','नियोक्ता')} ${row.empR}%</span>`;
+    const daDisplay = row.event==='cpc'
+      ? `<span style="color:var(--accent-red);font-weight:700;" title="${L('DA reset to 0% after this Pay Commission','या वेतन आयोगानंतर DA शून्य होतो')}">${row.da}% ${L('↺ reset','↺ शून्य')}</span>`
+      : `${row.da}%`;
     return `<tr>
       <td class="mono">${row.year}</td>
-      <td>${row.label} ${tag}</td>
-      <td style="font-size:12px;color:var(--muted)">${row.designation}</td>
+      <td>${evl(row.label)} ${tag}</td>
+      <td style="font-size:12px;color:var(--muted)">${dz(row.designation)}${eraTag}</td>
       <td class="mono">${fmtFull(row.basic)}</td>
-      <td class="mono">${row.da}%</td>
-      <td class="mono" style="color:var(--accent)">${fmtFull(row.gross)}</td>
+      <td class="mono">${daDisplay}</td>
+      <td class="mono" style="color:var(--accent)">${fmtFull(row.gross)}${npsNote}</td>
     </tr>`;
   }).join('');
 
   // ── Recommendations ──
-  const recs=[
-    `Final designation at retirement: <strong>${retRow.designation}</strong> with last basic <strong>${fmt(retBasic)}</strong> and gross <strong>${fmt(retRow.gross)}</strong> (including ${retDA}% DA).`,
+  const recs = [
+    L(`Final designation: <strong>${retRow.designation}</strong> · Last basic <strong>${fmt(retBasic)}</strong> · Gross <strong>${fmt(retRow.gross)}</strong> (DA ${retDA}%).`,
+      `शेवटचे पद: <strong>${dz(retRow.designation)}</strong> · शेवटचे मूळ वेतन <strong>${fmt(retBasic)}</strong> · एकूण वेतन <strong>${fmt(retRow.gross)}</strong> (DA ${retDA}%).`),
+    joinedUnder6th
+      ? L(`You joined under the <strong>6th Pay Commission</strong>. Pay was on Pay Band + Grade Pay basis until June 2016. The <strong>7th CPC fitment of 2.67×</strong> was applied from <strong>July 1, 2016</strong>, significantly boosting your basic pay.`,
+          `तुम्ही <strong>6 व्या वेतन आयोगात</strong> रुजू झालात. जून 2016 पर्यंत वेतन पे-बँड + ग्रेड पे नुसार होते. <strong>1 जुलै 2016</strong> पासून <strong>7 व्या आयोगाचा 2.67× फिटमेंट</strong> लागू झाल्याने तुमचे मूळ वेतन लक्षणीय वाढले.`)
+      : L(`You joined under the <strong>7th Pay Commission</strong> (July 2016 onwards). UGC pay matrix levels applied directly from joining.`,
+          `तुम्ही <strong>7 व्या वेतन आयोगात</strong> (जुलै 2016 नंतर) रुजू झालात. UGC वेतन मॅट्रिक्सचे स्तर रुजू झाल्यापासून थेट लागू.`),
+    L(`<strong>NPS employer contribution</strong>: was <strong>${Math.round(empRold*100)}%</strong> until March 31, 2019 → raised to <strong>${Math.round(empRnew*100)}%</strong> from <strong>April 1, 2019</strong>. Both phases applied correctly in corpus computation.`,
+      `<strong>NPS नियोक्ता अंशदान</strong>: 31 मार्च 2019 पर्यंत <strong>${Math.round(empRold*100)}%</strong> → <strong>1 एप्रिल 2019</strong> पासून <strong>${Math.round(empRnew*100)}%</strong>. कॉर्पस गणनेत दोन्ही टप्पे योग्यरित्या लागू केले आहेत.`),
     willProf
-      ? `<strong>Professor promotion</strong> applies after <strong>${profYrs} years from joining</strong> (year ${profDate.getFullYear()}), keeping minimum grade pay scales into account.`
-      : `Your service of ${totalYrs.toFixed(0)} years does not reach the ${profYrs}-year threshold for Professor promotion. Consider applying for CAS earlier.`,
-    willAssoc && !willProf
-      ? `You will be promoted to <strong>Associate Professor</strong> after ${assocYrs} years (${assocDate.getFullYear()}), but service ends before reaching Professor designation.`
-      : '',
-    `<strong>UPS Monthly Pension: ${fmt(upsPension)}/month</strong> · <strong>NPS Monthly Pension: ${fmt(npsMonthlyPension)}/month</strong>. UPS pension is DA-indexed and grows annually.`,
-    `Cumulative pension over 20 years — UPS: <strong>${fmt(upsPension*12*20*(1+daG/100*10))}</strong> (approx. with DA growth) vs NPS: <strong>${fmt(npsMonthlyPension*12*20)}</strong> (fixed).`,
-    totalYrs>=25
-      ? `✅ With ${totalYrs.toFixed(0)} years you qualify for <strong>full UPS pension</strong> (minimum 25 years required).`
-      : `⚠️ UPS requires minimum 25 years for full pension. Your projected ${totalYrs.toFixed(0)} years may qualify for proportional or minimum ₹10,000/month guarantee.`,
-    `Gratuity (both schemes) ≈ ${fmt(upsGratuity)} — tax-exempt up to ₹20 lakh under current Income Tax rules.`,
+      ? L(`Professor promotion after <strong>${profYrs} years from joining</strong> (${profDate.getFullYear()}) at UGC Level 14 basic ₹1,44,200 (7th CPC).`,
+          `रुजू झाल्यापासून <strong>${profYrs} वर्षांनी</strong> (${profDate.getFullYear()}) प्राध्यापक पदोन्नती — UGC स्तर 14 मूळ वेतन ₹1,44,200 (7 वा आयोग).`)
+      : L(`Your service of ${totalYrs.toFixed(0)} years does not reach the ${profYrs}-year Professor threshold.`,
+          `तुमची ${totalYrs.toFixed(0)} वर्षांची सेवा प्राध्यापक पदासाठीच्या ${profYrs}-वर्षांच्या मर्यादेपर्यंत पोहोचत नाही.`),
+    rnpsEligible
+      ? L(`<strong>Maharashtra RNPS:</strong> assured pension <strong>${fmt(rnpsPension)}/month</strong> (${totalYrs>=20?'50% of last basic':'proportionate, '+totalYrs.toFixed(1)+'/20 yrs'}) plus dearness relief, gratuity and 60% family pension. Employees already under NPS must <strong>opt in by 31 December 2026</strong>; any past NPS withdrawals must be refunded with 10% interest.`,
+          `<strong>महाराष्ट्र RNPS:</strong> निश्चित पेन्शन <strong>${fmt(rnpsPension)}/महिना</strong> (${totalYrs>=20?'शेवटच्या मूळ वेतनाच्या 50%':'प्रमाणशीर, '+totalYrs.toFixed(1)+'/20 वर्षे'}) तसेच महागाई सवलत, उपदान आणि 60% कुटुंब निवृत्तीवेतन. सध्या NPS मध्ये असलेल्या कर्मचाऱ्यांनी <strong>31 डिसेंबर 2026 पर्यंत पर्याय</strong> द्यावा; NPS मधून पूर्वी काढलेली रक्कम 10% व्याजासह परत करावी लागेल.`)
+      : L(`<strong>Maharashtra RNPS:</strong> requires at least 10 years of service for any pension — your projected service is ${totalYrs.toFixed(1)} years.`,
+          `<strong>महाराष्ट्र RNPS:</strong> कोणत्याही पेन्शनसाठी किमान 10 वर्षे सेवा आवश्यक — तुमची अपेक्षित सेवा ${totalYrs.toFixed(1)} वर्षे आहे.`),
+    L(`UPS pension: <strong>${fmt(upsPension)}/month</strong> · NPS pension: <strong>${fmt(npsMonthlyPension)}/month</strong>${fdOn?` (annuity ${fmt(npsAnnuityPension)} + FD interest ${fmt(npsFdIncome)})`:''}. UPS is DA-indexed and grows annually; NPS annuity and FD interest are fixed.`,
+      `UPS पेन्शन: <strong>${fmt(upsPension)}/महिना</strong> · NPS पेन्शन: <strong>${fmt(npsMonthlyPension)}/महिना</strong>${fdOn?` (ॲन्युइटी ${fmt(npsAnnuityPension)} + FD व्याज ${fmt(npsFdIncome)})`:''}. UPS DA शी जोडलेली असून दरवर्षी वाढते; NPS ॲन्युइटी व FD व्याज स्थिर असतात.`),
+    totalYrs >= 25
+      ? L(`✅ ${totalYrs.toFixed(0)} years of service qualifies for <strong>full UPS pension</strong> (minimum 25 years required).`,
+          `✅ ${totalYrs.toFixed(0)} वर्षांची सेवा <strong>पूर्ण UPS पेन्शन</strong>साठी पात्र (किमान 25 वर्षे आवश्यक).`)
+      : L(`⚠️ UPS requires minimum 25 years for full pension. Your ${totalYrs.toFixed(0)} years may qualify for proportional or minimum guaranteed ₹10,000/month.`,
+          `⚠️ पूर्ण पेन्शनसाठी UPS ला किमान 25 वर्षे सेवा लागते. तुमची ${totalYrs.toFixed(0)} वर्षे प्रमाणशीर किंवा किमान हमी ₹10,000/महिना साठी पात्र ठरू शकतात.`),
+    L(`Gratuity ≈ ${fmt(upsGratuity)} — tax-exempt up to ₹20 lakh. NPS lump sum ${fmt(npsLumpsum)} — 60% is tax-free on withdrawal.`,
+      `उपदान ≈ ${fmt(upsGratuity)} — ₹20 लाखांपर्यंत करमुक्त. NPS एकरकमी ${fmt(npsLumpsum)} — काढताना 60% करमुक्त.`),
   ].filter(Boolean);
 
-  document.getElementById('recommendations').innerHTML=recs.map(r=>`<li>${r}</li>`).join('');
+  document.getElementById('recommendations').innerHTML = recs.map(r=>`<li>${r}</li>`).join('');
 }
 
 function resetForm() {
   document.getElementById('form-section').style.display='block';
   document.getElementById('results').style.display='none';
   document.getElementById('pvInsightBanner').style.display='none';
+  // Clear manual DA override so auto-compute resumes
+  const daField = document.getElementById('daAtRetirement');
+  delete daField.dataset.manuallyEdited;
   document.querySelectorAll('.chart-tab').forEach((t,i)=>t.classList.toggle('active',i===0));
   document.querySelectorAll('.chart-panel').forEach((p,i)=>p.classList.toggle('active',i===0));
   window.scrollTo({top:0,behavior:'smooth'});
