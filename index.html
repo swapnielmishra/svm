@@ -252,6 +252,28 @@
     </div>
 
     <div class="card">
+      <div class="card-title"><span class="icon">🏛️</span> UPS Option &amp; Contribution Rates</div>
+      <p class="card-desc">If you opt for UPS, the government contribution changes from the opt-in month. Enter the month you opt for UPS; before that date NPS rates apply.</p>
+      <div class="form-grid">
+        <div class="field"><label>UPS Opt-in Date</label><input type="date" id="upsOptDate"><span class="field-hint">UPS contribution rates apply from this month. Default 1 April 2025 (or joining date if later).</span></div>
+        <div class="field"><label>UPS Govt Contribution – Your Account (%)</label><input type="number" id="upsGovtInd" value="10" step="0.5" min="0" max="30"><span class="field-hint">Credited to your individual corpus (matches your 10%)</span></div>
+        <div class="field"><label>UPS Govt Contribution – Common Pool (%)</label><input type="number" id="upsGovtPool" value="8.5" step="0.5" min="0" max="30"><span class="field-hint">Paid to the pool corpus – not credited to you</span></div>
+      </div>
+      <div class="table-wrap" style="margin-top:22px;">
+        <table>
+          <thead><tr><th>Particulars</th><th>UPS (Central)</th><th>Maharashtra RNPS / NPS</th></tr></thead>
+          <tbody>
+            <tr><td>Employee contribution</td><td class="mono">10%</td><td class="mono">10%</td></tr>
+            <tr><td>Government contribution</td><td class="mono"><strong>18.5%</strong></td><td class="mono"><strong>14%</strong></td></tr>
+            <tr><td>Total contribution</td><td class="mono">28.5%</td><td class="mono">24%</td></tr>
+            <tr><td>Govt contribution to individual pension account</td><td class="mono">10%</td><td class="mono">14%</td></tr>
+            <tr><td>Additional govt contribution to common pool</td><td class="mono">8.5%</td><td class="mono">—</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
       <div class="card-title"><span class="icon">📊</span> Dearness Allowance &amp; Assumptions</div>
       <p class="card-desc">DA growth rate used between pay commissions for gross pay &amp; pension calculations.</p>
       <div class="form-grid">
@@ -304,9 +326,12 @@
       <div class="scheme-card ups">
         <div class="scheme-label">Unified Pension Scheme</div>
         <div class="scheme-name">UPS Benefit</div>
-        <div class="metric"><div class="metric-label">Monthly Pension</div><div class="metric-value highlight-ups" id="upsMonthlyPension">—</div><div class="metric-sub">50% of last 12-month avg basic</div><div class="pv-badge"><span class="pv-lbl">PV Today →</span><span id="pvUpsPension">—</span>/mo</div></div>
+        <div class="metric"><div class="metric-label">Monthly Pension</div><div class="metric-value highlight-ups" id="upsMonthlyPension">—</div><div class="metric-sub" id="upsPensionNote">50% of last 12-month avg basic</div><div class="pv-badge"><span class="pv-lbl">PV Today →</span><span id="pvUpsPension">—</span>/mo</div></div>
+        <div class="metric"><div class="metric-label">Pension incl. Dearness Relief (at retirement)</div><div class="metric-value highlight-ups" id="upsPensionDR">—</div><div class="metric-sub">Pension + DR @ estimated DA %</div><div class="pv-badge"><span class="pv-lbl">PV Today →</span><span id="pvUpsPensionDR">—</span>/mo</div></div>
         <div class="metric"><div class="metric-label">Lump Sum at Retirement</div><div class="metric-value" id="upsLumpsum">—</div><div class="metric-sub">1/10 of (Basic+DA) per 6m block</div><div class="pv-badge"><span class="pv-lbl">PV Today →</span><span id="pvUpsLumpsum">—</span></div></div>
         <div class="metric"><div class="metric-label">Gratuity</div><div class="metric-value" id="upsGratuity">—</div><div class="metric-sub">15/26 × Basic × Service (capped)</div><div class="pv-badge"><span class="pv-lbl">PV Today →</span><span id="pvUpsGratuity">—</span></div></div>
+        <div class="metric"><div class="metric-label">Individual Corpus at Retirement (UPS)</div><div class="metric-value highlight-ups" id="upsIC">—</div><div class="metric-sub" id="upsICNote">—</div><div class="pv-badge"><span class="pv-lbl">PV Today →</span><span id="pvUpsIC">—</span></div></div>
+        <div class="metric"><div class="metric-label">Govt Contribution to Common Pool</div><div class="metric-value" id="upsPoolPaid">—</div><div class="metric-sub">Total paid by Govt into the pool corpus — not credited to you; it funds the assured pension</div></div>
         <div class="metric"><div class="metric-label">DA-linked Inflation Protection</div><div class="metric-value" style="font-size:16px;color:var(--accent3);">✓ Yes</div><div class="metric-sub">Pension rises with DA revisions</div></div>
       </div>
 
@@ -314,7 +339,7 @@
         <div class="scheme-label">Maharashtra Govt · Revised NPS</div>
         <div class="scheme-name">RNPS Benefit</div>
         <div class="metric"><div class="metric-label">Assured Monthly Pension</div><div class="metric-value highlight-rnps" id="rnpsPension">—</div><div class="metric-sub" id="rnpsPensionNote">—</div><div class="pv-badge"><span class="pv-lbl">PV Today →</span><span id="pvRnpsPension">—</span>/mo</div></div>
-        <div class="metric"><div class="metric-label">Pension incl. Dearness Relief (at retirement)</div><div class="metric-value" id="rnpsPensionDR">—</div><div class="metric-sub">Pension + DR @ estimated DA %</div></div>
+        <div class="metric"><div class="metric-label">Pension incl. Dearness Relief (at retirement)</div><div class="metric-value" id="rnpsPensionDR">—</div><div class="metric-sub">Pension + DR @ estimated DA %</div><div class="pv-badge"><span class="pv-lbl">PV Today →</span><span id="pvRnpsPensionDR">—</span>/mo</div></div>
         <div class="metric"><div class="metric-label">NPS Corpus Treatment</div><div class="metric-value" style="font-size:16px;" id="rnpsCorpusSplit">—</div><div class="metric-sub">60% deposited with Govt · 40% annuity (adjusted against pension) · no NPS lump sum</div></div>
         <div class="metric"><div class="metric-label">Gratuity</div><div class="metric-value" id="rnpsGratuity">—</div><div class="metric-sub">Retirement gratuity applies under RNPS</div><div class="pv-badge"><span class="pv-lbl">PV Today →</span><span id="pvRnpsGratuity">—</span></div></div>
         <div class="metric"><div class="metric-label">Family Pension</div><div class="metric-value" style="font-size:16px;" id="rnpsFamily">—</div><div class="metric-sub">60% of admissible pension + dearness relief</div></div>
@@ -416,8 +441,8 @@ function evl(lb) {
   const r = lb.match(/^(\d+)th Pay Commission$/);
   return r ? r[1] + ' वा वेतन आयोग' : lb;
 }
-const MR_DICT = {"UGC 7th Pay Commission · NPS vs UPS vs RNPS": "UGC 7 वा वेतन आयोग · NPS विरुद्ध UPS विरुद्ध RNPS", "Higher Education": "उच्च शिक्षण", "Pension Calculator": "पेन्शन कॅल्क्युलेटर", "Comprehensive retirement planning for university lecturers, assistant professors, associate professors & professors under UGC pay scales.": "UGC वेतनश्रेणीतील सहायक प्राध्यापक, सहयोगी प्राध्यापक आणि प्राध्यापकांसाठी सर्वसमावेशक सेवानिवृत्ती नियोजन.", "Personal & Service Details": "वैयक्तिक व सेवेचा तपशील", "Enter your basic information to compute service duration and retirement timeline.": "सेवा कालावधी व सेवानिवृत्तीची वेळरेषा काढण्यासाठी मूलभूत माहिती भरा.", "Date of Joining Service": "सेवेत रुजू होण्याची तारीख", "Date of Birth": "जन्मतारीख", "Retirement Date": "सेवानिवृत्तीची तारीख", "Auto-computed (age 60)": "आपोआप मोजले जाते (वय 60)", "Retirement at age 60 as per UGC norms": "UGC नियमांनुसार वयाच्या 60 व्या वर्षी सेवानिवृत्ती", "Total Service (Years)": "एकूण सेवा (वर्षे)", "Auto-computed": "आपोआप मोजले जाते", "Pay Scale Configuration": "वेतनश्रेणी सेटिंग्ज", "If joined before July 1 2016, 6th CPC grade pay is used first; 7th CPC applied automatically from July 2016. Both promotion years counted from date of joining.": "1 जुलै 2016 पूर्वी रुजू झाले असल्यास आधी 6 व्या वेतन आयोगातील ग्रेड पे वापरला जातो; जुलै 2016 पासून 7 वा वेतन आयोग आपोआप लागू होतो. दोन्ही पदोन्नतींची वर्षे रुजू होण्याच्या तारखेपासून मोजली जातात.", "Starting Basic Pay (₹)": "सुरुवातीचे मूळ वेतन (₹)", "Assoc. Prof. After (Years from Joining)": "सहयोगी प्राध्यापक पदोन्नती (रुजू झाल्यापासून वर्षे)", "Default 12 yrs · Editable": "डीफॉल्ट 12 वर्षे · बदलता येते", "Professor After (Years from Joining)": "प्राध्यापक पदोन्नती (रुजू झाल्यापासून वर्षे)", "Default 15 yrs from joining · Editable": "रुजू झाल्यापासून डीफॉल्ट 15 वर्षे · बदलता येते", "6th CPC (Pre July 2016) — Grade Pay + Basic": "6 वा वेतन आयोग (जुलै 2016 पूर्वी) — ग्रेड पे + मूळ वेतन", "Asst. Professor": "सहायक प्राध्यापक", "Assoc. Professor": "सहयोगी प्राध्यापक", "Professor": "प्राध्यापक", "₹15,600 + GP ₹6,000": "₹15,600 + ग्रेड पे ₹6,000", "PB-3 · Basic ~₹21,600": "PB-3 · मूळ वेतन ~₹21,600", "₹37,400 + GP ₹9,000": "₹37,400 + ग्रेड पे ₹9,000", "PB-4 · Basic ~₹46,400": "PB-4 · मूळ वेतन ~₹46,400", "₹37,400 + GP ₹10,000": "₹37,400 + ग्रेड पे ₹10,000", "PB-4 · Basic ~₹47,400": "PB-4 · मूळ वेतन ~₹47,400", "7th CPC (From July 1, 2016) — Pay Matrix": "7 वा वेतन आयोग (1 जुलै 2016 पासून) — वेतन मॅट्रिक्स", "Level 10": "स्तर 10", "Level 13A": "स्तर 13A", "Level 14": "स्तर 14", "Future Pay Commission Multipliers": "भविष्यातील वेतन आयोग गुणक", "Estimated fitment factors for future pay commissions (8th CPC 2026, 9th CPC 2036, etc.).": "भविष्यातील वेतन आयोगांसाठी अंदाजित फिटमेंट फॅक्टर (8 वा आयोग 2026, 9 वा आयोग 2036 इ.).", "8th CPC Year": "8 व्या आयोगाचे वर्ष", "8th CPC Fitment Factor": "8 व्या आयोगाचा फिटमेंट फॅक्टर", "Expected ~1.92×": "अपेक्षित ~1.92×", "9th CPC Year": "9 व्या आयोगाचे वर्ष", "9th CPC Fitment Factor": "9 व्या आयोगाचा फिटमेंट फॅक्टर", "10th CPC Year": "10 व्या आयोगाचे वर्ष", "10th CPC Fitment Factor": "10 व्या आयोगाचा फिटमेंट फॅक्टर", "NPS Configuration": "NPS सेटिंग्ज", "Employer contribution was": "नियोक्ता (शासन) अंशदान मार्च 2019 पर्यंत", "until March 2019, then raised to": "होते, नंतर 1 एप्रिल 2019 पासून", "from April 1, 2019. The calculator applies the correct rate automatically based on year.": "करण्यात आले. कॅल्क्युलेटर वर्षानुसार योग्य दर आपोआप लागू करतो.", "Present NPS Corpus (₹)": "सध्याचा NPS कॉर्पस (₹)", "Current accumulated corpus": "आतापर्यंत जमा झालेला कॉर्पस", "Expected NPS Return (% p.a.)": "अपेक्षित NPS परतावा (% वार्षिक)", "Historical avg ~9–10%": "ऐतिहासिक सरासरी ~9–10%", "Employee Contribution (%)": "कर्मचारी अंशदान (%)", "10% of Basic + DA (fixed)": "मूळ वेतन + DA च्या 10% (निश्चित)", "Employer % (pre Apr 2019)": "नियोक्ता % (एप्रिल 2019 पूर्वी)", "Was 10% before April 1, 2019": "1 एप्रिल 2019 पूर्वी 10% होते", "Employer % (from Apr 2019)": "नियोक्ता % (एप्रिल 2019 पासून)", "Raised to 14% from April 1, 2019": "1 एप्रिल 2019 पासून 14% करण्यात आले", "Annuity Rate (% p.a.)": "ॲन्युइटी दर (% वार्षिक)", "Corpus → pension conversion": "कॉर्पस → पेन्शन रूपांतर", "Annuity Purchase %": "ॲन्युइटी खरेदी %", "Min 40% must be annuitised": "किमान 40% रकमेची ॲन्युइटी घेणे बंधनकारक", "Invest Lump Sum in FD?": "एकरकमी रक्कम FD मध्ये गुंतवायची का?", "Yes – add FD interest to pension": "होय – FD व्याज पेन्शनमध्ये जोडा", "No – ignore lump sum income": "नाही – एकरकमी रकमेचे उत्पन्न वगळा", "Lump sum (100% − annuity %) placed in Fixed Deposit": "एकरकमी रक्कम (100% − ॲन्युइटी %) मुदत ठेवीत (FD) गुंतवली जाते", "FD Interest Rate (% p.a.)": "FD व्याजदर (% वार्षिक)", "Monthly interest is added to NPS pension (principal stays intact)": "मासिक व्याज NPS पेन्शनमध्ये जोडले जाते (मुद्दल कायम राहते)", "Dearness Allowance & Assumptions": "महागाई भत्ता (DA) व गृहीतके", "DA growth rate used between pay commissions for gross pay & pension calculations.": "एकूण वेतन व पेन्शन गणनेसाठी वेतन आयोगांदरम्यान वापरलेला DA वाढीचा दर.", "DA Growth Rate (% per year)": "DA वाढीचा दर (% प्रतिवर्ष)", "DA resets to 0 after each Pay Commission, then grows at this rate": "प्रत्येक वेतन आयोगानंतर DA शून्य होतो, नंतर या दराने वाढतो", "DA at Retirement (%)": "सेवानिवृत्तीच्या वेळी DA (%)", "EDITABLE": "बदलता येते", "Auto-computed — override if needed": "आपोआप मोजले जाते — हवे असल्यास बदला", "Auto-filled based on last CPC reset + growth. You can manually override this.": "शेवटच्या आयोगानंतरच्या शून्यीकरण + वाढीवरून आपोआप भरले जाते. हवे असल्यास तुम्ही हे स्वतः बदलू शकता.", "Inflation Rate for PV (% p.a.)": "वर्तमान मूल्यासाठी महागाई दर (% वार्षिक)", "Used to discount future values to today's money": "भविष्यातील रकमा आजच्या मूल्यात आणण्यासाठी वापरला जातो", "⚡ Calculate Pension Benefits": "⚡ पेन्शन लाभ मोजा", "Pension Analysis Report": "पेन्शन विश्लेषण अहवाल", "Based on UGC Pay Commission & projected career trajectory": "UGC वेतन आयोग व अपेक्षित सेवा-प्रवासावर आधारित", "💡 Present Value Decoder — What Future Money Means in Today's Rupees": "💡 वर्तमान मूल्य (Present Value) — भविष्यातील रक्कम आजच्या रुपयांत किती?", "National Pension System": "राष्ट्रीय पेन्शन प्रणाली (NPS)", "NPS Benefit": "NPS लाभ", "Projected Total Corpus": "अंदाजित एकूण कॉर्पस", "At retirement": "सेवानिवृत्तीच्या वेळी", "PV Today →": "आजचे मूल्य →", "Lump Sum (60% withdrawal)": "एकरकमी रक्कम (60% काढता येणारी)", "Monthly Pension (Annuity + FD Interest)": "मासिक पेन्शन (ॲन्युइटी + FD व्याज)", "/mo": "/महिना", "Gratuity": "उपदान (ग्रॅच्युइटी)", "Max ₹20 lakh (7th CPC)": "कमाल ₹20 लाख (7 वा वेतन आयोग)", "Unified Pension Scheme": "एकीकृत पेन्शन योजना (UPS)", "UPS Benefit": "UPS लाभ", "Monthly Pension": "मासिक पेन्शन", "50% of last 12-month avg basic": "शेवटच्या 12 महिन्यांच्या सरासरी मूळ वेतनाच्या 50%", "Lump Sum at Retirement": "सेवानिवृत्तीच्या वेळी एकरकमी रक्कम", "1/10 of (Basic+DA) per 6m block": "प्रत्येक 6 महिन्यांसाठी (मूळ वेतन+DA) चा 1/10", "15/26 × Basic × Service (capped)": "15/26 × मूळ वेतन × सेवा वर्षे (कमाल मर्यादेसह)", "DA-linked Inflation Protection": "DA शी जोडलेले महागाई संरक्षण", "✓ Yes": "✓ होय", "Pension rises with DA revisions": "DA सुधारणांबरोबर पेन्शन वाढते", "Maharashtra Govt · Revised NPS": "महाराष्ट्र शासन · सुधारित NPS", "RNPS Benefit": "RNPS लाभ", "Assured Monthly Pension": "निश्चित मासिक पेन्शन", "Pension incl. Dearness Relief (at retirement)": "महागाई सवलतीसह पेन्शन (सेवानिवृत्तीच्या वेळी)", "Pension + DR @ estimated DA %": "पेन्शन + महागाई सवलत (अंदाजित DA % प्रमाणे)", "NPS Corpus Treatment": "NPS कॉर्पसची विभागणी", "60% deposited with Govt · 40% annuity (adjusted against pension) · no NPS lump sum": "60% शासनाकडे जमा · 40% ॲन्युइटी (पेन्शनमधून समायोजित) · NPS ची एकरकमी रक्कम नाही", "Retirement gratuity applies under RNPS": "RNPS अंतर्गत सेवानिवृत्ती उपदान लागू", "Family Pension": "कुटुंब निवृत्तीवेतन", "60% of admissible pension + dearness relief": "देय पेन्शनच्या 60% + महागाई सवलत", "📊 Visual Comparison": "📊 आलेखाद्वारे तुलना", "Lump Sum & Corpus": "एकरकमी रक्कम व कॉर्पस", "Pay Growth": "वेतन वाढ", "Cumulative (20 yrs)": "एकत्रित (20 वर्षे)", "Nominal vs Real Value": "नाममात्र विरुद्ध वास्तविक मूल्य", "NPS pension remains fixed; UPS pension grows annually with DA hikes.": "NPS पेन्शन स्थिर राहते; UPS पेन्शन DA वाढीबरोबर दरवर्षी वाढते.", "Nominal = future rupee amount · Real (PV) = equivalent purchasing power in today's rupees · Inflation-discounted using your entered rate.": "नाममात्र = भविष्यातील रुपयांतील रक्कम · वास्तविक (PV) = आजच्या रुपयांतील क्रयशक्ती · तुम्ही दिलेल्या महागाई दराने कमी केलेले मूल्य.", "Career & Pay Timeline": "सेवा व वेतन वेळरेषा", "Pay Progression Details": "वेतन प्रगतीचा तपशील", "Year": "वर्ष", "Event": "घटना", "Designation": "पदनाम", "Basic Pay (₹)": "मूळ वेतन (₹)", "Gross Pay (₹)": "एकूण वेतन (₹)", "Key Insights & Recommendations": "महत्त्वाचे निष्कर्ष व शिफारसी", "Disclaimer:": "अस्वीकरण:", "Projections are based on assumptions about future pay commissions, DA rates, and NPS returns. Actual benefits may vary. Future CPC fitment factors are estimated, not officially announced. Professor promotion is applied after completing specified years from joining, per UGC CAS norms. NPS corpus is market-linked. UPS availability depends on institution adoption. Consult your institution's finance cell and a certified financial advisor for official figures.": "भविष्यातील वेतन आयोग, DA दर आणि NPS परतावा याबाबतच्या गृहीतकांवर हे अंदाज आधारित आहेत. प्रत्यक्ष लाभ वेगळे असू शकतात. भविष्यातील आयोगांचे फिटमेंट फॅक्टर अंदाजित आहेत, अधिकृतपणे जाहीर झालेले नाहीत. UGC CAS नियमांनुसार, रुजू झाल्यापासून ठरावीक वर्षे पूर्ण झाल्यावर प्राध्यापक पदोन्नती गृहीत धरली आहे. NPS कॉर्पस बाजाराशी निगडित आहे. UPS ची उपलब्धता संस्थेने ती स्वीकारण्यावर अवलंबून आहे. अधिकृत आकडेवारीसाठी तुमच्या संस्थेच्या वित्त विभागाचा व प्रमाणित आर्थिक सल्लागाराचा सल्ला घ्या.", "← Recalculate": "← पुन्हा मोजा", "Higher Education Pension Calculator · UGC Pay Commission Reference Tool · 2025": "उच्च शिक्षण पेन्शन कॅल्क्युलेटर · UGC वेतन आयोग संदर्भ साधन · 2025"};
-const SKIP_SEL = '#careerTimeline,#payTable,#recommendations,#summaryChips,#winnerText,#winnerSub,#pvInsightText,#startingBasicHint,.lang-toggle,script,style';
+const MR_DICT = {"UGC 7th Pay Commission · NPS vs UPS vs RNPS": "UGC 7 वा वेतन आयोग · NPS विरुद्ध UPS विरुद्ध RNPS", "Higher Education": "उच्च शिक्षण", "Pension Calculator": "पेन्शन कॅल्क्युलेटर", "Comprehensive retirement planning for university lecturers, assistant professors, associate professors & professors under UGC pay scales.": "UGC वेतनश्रेणीतील सहायक प्राध्यापक, सहयोगी प्राध्यापक आणि प्राध्यापकांसाठी सर्वसमावेशक सेवानिवृत्ती नियोजन.", "Personal & Service Details": "वैयक्तिक व सेवेचा तपशील", "Enter your basic information to compute service duration and retirement timeline.": "सेवा कालावधी व सेवानिवृत्तीची वेळरेषा काढण्यासाठी मूलभूत माहिती भरा.", "Date of Joining Service": "सेवेत रुजू होण्याची तारीख", "Date of Birth": "जन्मतारीख", "Retirement Date": "सेवानिवृत्तीची तारीख", "Auto-computed (age 60)": "आपोआप मोजले जाते (वय 60)", "Retirement at age 60 as per UGC norms": "UGC नियमांनुसार वयाच्या 60 व्या वर्षी सेवानिवृत्ती", "Total Service (Years)": "एकूण सेवा (वर्षे)", "Auto-computed": "आपोआप मोजले जाते", "Pay Scale Configuration": "वेतनश्रेणी सेटिंग्ज", "If joined before July 1 2016, 6th CPC grade pay is used first; 7th CPC applied automatically from July 2016. Both promotion years counted from date of joining.": "1 जुलै 2016 पूर्वी रुजू झाले असल्यास आधी 6 व्या वेतन आयोगातील ग्रेड पे वापरला जातो; जुलै 2016 पासून 7 वा वेतन आयोग आपोआप लागू होतो. दोन्ही पदोन्नतींची वर्षे रुजू होण्याच्या तारखेपासून मोजली जातात.", "Starting Basic Pay (₹)": "सुरुवातीचे मूळ वेतन (₹)", "Assoc. Prof. After (Years from Joining)": "सहयोगी प्राध्यापक पदोन्नती (रुजू झाल्यापासून वर्षे)", "Default 12 yrs · Editable": "डीफॉल्ट 12 वर्षे · बदलता येते", "Professor After (Years from Joining)": "प्राध्यापक पदोन्नती (रुजू झाल्यापासून वर्षे)", "Default 15 yrs from joining · Editable": "रुजू झाल्यापासून डीफॉल्ट 15 वर्षे · बदलता येते", "6th CPC (Pre July 2016) — Grade Pay + Basic": "6 वा वेतन आयोग (जुलै 2016 पूर्वी) — ग्रेड पे + मूळ वेतन", "Asst. Professor": "सहायक प्राध्यापक", "Assoc. Professor": "सहयोगी प्राध्यापक", "Professor": "प्राध्यापक", "₹15,600 + GP ₹6,000": "₹15,600 + ग्रेड पे ₹6,000", "PB-3 · Basic ~₹21,600": "PB-3 · मूळ वेतन ~₹21,600", "₹37,400 + GP ₹9,000": "₹37,400 + ग्रेड पे ₹9,000", "PB-4 · Basic ~₹46,400": "PB-4 · मूळ वेतन ~₹46,400", "₹37,400 + GP ₹10,000": "₹37,400 + ग्रेड पे ₹10,000", "PB-4 · Basic ~₹47,400": "PB-4 · मूळ वेतन ~₹47,400", "7th CPC (From July 1, 2016) — Pay Matrix": "7 वा वेतन आयोग (1 जुलै 2016 पासून) — वेतन मॅट्रिक्स", "Level 10": "स्तर 10", "Level 13A": "स्तर 13A", "Level 14": "स्तर 14", "Future Pay Commission Multipliers": "भविष्यातील वेतन आयोग गुणक", "Estimated fitment factors for future pay commissions (8th CPC 2026, 9th CPC 2036, etc.).": "भविष्यातील वेतन आयोगांसाठी अंदाजित फिटमेंट फॅक्टर (8 वा आयोग 2026, 9 वा आयोग 2036 इ.).", "8th CPC Year": "8 व्या आयोगाचे वर्ष", "8th CPC Fitment Factor": "8 व्या आयोगाचा फिटमेंट फॅक्टर", "Expected ~1.92×": "अपेक्षित ~1.92×", "9th CPC Year": "9 व्या आयोगाचे वर्ष", "9th CPC Fitment Factor": "9 व्या आयोगाचा फिटमेंट फॅक्टर", "10th CPC Year": "10 व्या आयोगाचे वर्ष", "10th CPC Fitment Factor": "10 व्या आयोगाचा फिटमेंट फॅक्टर", "NPS Configuration": "NPS सेटिंग्ज", "Employer contribution was": "नियोक्ता (शासन) अंशदान मार्च 2019 पर्यंत", "until March 2019, then raised to": "होते, नंतर 1 एप्रिल 2019 पासून", "from April 1, 2019. The calculator applies the correct rate automatically based on year.": "करण्यात आले. कॅल्क्युलेटर वर्षानुसार योग्य दर आपोआप लागू करतो.", "Present NPS Corpus (₹)": "सध्याचा NPS कॉर्पस (₹)", "Current accumulated corpus": "आतापर्यंत जमा झालेला कॉर्पस", "Expected NPS Return (% p.a.)": "अपेक्षित NPS परतावा (% वार्षिक)", "Historical avg ~9–10%": "ऐतिहासिक सरासरी ~9–10%", "Employee Contribution (%)": "कर्मचारी अंशदान (%)", "10% of Basic + DA (fixed)": "मूळ वेतन + DA च्या 10% (निश्चित)", "Employer % (pre Apr 2019)": "नियोक्ता % (एप्रिल 2019 पूर्वी)", "Was 10% before April 1, 2019": "1 एप्रिल 2019 पूर्वी 10% होते", "Employer % (from Apr 2019)": "नियोक्ता % (एप्रिल 2019 पासून)", "Raised to 14% from April 1, 2019": "1 एप्रिल 2019 पासून 14% करण्यात आले", "Annuity Rate (% p.a.)": "ॲन्युइटी दर (% वार्षिक)", "Corpus → pension conversion": "कॉर्पस → पेन्शन रूपांतर", "Annuity Purchase %": "ॲन्युइटी खरेदी %", "Min 40% must be annuitised": "किमान 40% रकमेची ॲन्युइटी घेणे बंधनकारक", "Invest Lump Sum in FD?": "एकरकमी रक्कम FD मध्ये गुंतवायची का?", "Yes – add FD interest to pension": "होय – FD व्याज पेन्शनमध्ये जोडा", "No – ignore lump sum income": "नाही – एकरकमी रकमेचे उत्पन्न वगळा", "Lump sum (100% − annuity %) placed in Fixed Deposit": "एकरकमी रक्कम (100% − ॲन्युइटी %) मुदत ठेवीत (FD) गुंतवली जाते", "FD Interest Rate (% p.a.)": "FD व्याजदर (% वार्षिक)", "Monthly interest is added to NPS pension (principal stays intact)": "मासिक व्याज NPS पेन्शनमध्ये जोडले जाते (मुद्दल कायम राहते)", "Dearness Allowance & Assumptions": "महागाई भत्ता (DA) व गृहीतके", "DA growth rate used between pay commissions for gross pay & pension calculations.": "एकूण वेतन व पेन्शन गणनेसाठी वेतन आयोगांदरम्यान वापरलेला DA वाढीचा दर.", "DA Growth Rate (% per year)": "DA वाढीचा दर (% प्रतिवर्ष)", "DA resets to 0 after each Pay Commission, then grows at this rate": "प्रत्येक वेतन आयोगानंतर DA शून्य होतो, नंतर या दराने वाढतो", "DA at Retirement (%)": "सेवानिवृत्तीच्या वेळी DA (%)", "EDITABLE": "बदलता येते", "Auto-computed — override if needed": "आपोआप मोजले जाते — हवे असल्यास बदला", "Auto-filled based on last CPC reset + growth. You can manually override this.": "शेवटच्या आयोगानंतरच्या शून्यीकरण + वाढीवरून आपोआप भरले जाते. हवे असल्यास तुम्ही हे स्वतः बदलू शकता.", "Inflation Rate for PV (% p.a.)": "वर्तमान मूल्यासाठी महागाई दर (% वार्षिक)", "Used to discount future values to today's money": "भविष्यातील रकमा आजच्या मूल्यात आणण्यासाठी वापरला जातो", "⚡ Calculate Pension Benefits": "⚡ पेन्शन लाभ मोजा", "Pension Analysis Report": "पेन्शन विश्लेषण अहवाल", "Based on UGC Pay Commission & projected career trajectory": "UGC वेतन आयोग व अपेक्षित सेवा-प्रवासावर आधारित", "💡 Present Value Decoder — What Future Money Means in Today's Rupees": "💡 वर्तमान मूल्य (Present Value) — भविष्यातील रक्कम आजच्या रुपयांत किती?", "National Pension System": "राष्ट्रीय पेन्शन प्रणाली (NPS)", "NPS Benefit": "NPS लाभ", "Projected Total Corpus": "अंदाजित एकूण कॉर्पस", "At retirement": "सेवानिवृत्तीच्या वेळी", "PV Today →": "आजचे मूल्य →", "Lump Sum (60% withdrawal)": "एकरकमी रक्कम (60% काढता येणारी)", "Monthly Pension (Annuity + FD Interest)": "मासिक पेन्शन (ॲन्युइटी + FD व्याज)", "/mo": "/महिना", "Gratuity": "उपदान (ग्रॅच्युइटी)", "Max ₹20 lakh (7th CPC)": "कमाल ₹20 लाख (7 वा वेतन आयोग)", "Unified Pension Scheme": "एकीकृत पेन्शन योजना (UPS)", "UPS Benefit": "UPS लाभ", "Monthly Pension": "मासिक पेन्शन", "50% of last 12-month avg basic": "शेवटच्या 12 महिन्यांच्या सरासरी मूळ वेतनाच्या 50%", "Lump Sum at Retirement": "सेवानिवृत्तीच्या वेळी एकरकमी रक्कम", "1/10 of (Basic+DA) per 6m block": "प्रत्येक 6 महिन्यांसाठी (मूळ वेतन+DA) चा 1/10", "15/26 × Basic × Service (capped)": "15/26 × मूळ वेतन × सेवा वर्षे (कमाल मर्यादेसह)", "DA-linked Inflation Protection": "DA शी जोडलेले महागाई संरक्षण", "✓ Yes": "✓ होय", "Pension rises with DA revisions": "DA सुधारणांबरोबर पेन्शन वाढते", "Maharashtra Govt · Revised NPS": "महाराष्ट्र शासन · सुधारित NPS", "RNPS Benefit": "RNPS लाभ", "Assured Monthly Pension": "निश्चित मासिक पेन्शन", "Pension incl. Dearness Relief (at retirement)": "महागाई सवलतीसह पेन्शन (सेवानिवृत्तीच्या वेळी)", "Pension + DR @ estimated DA %": "पेन्शन + महागाई सवलत (अंदाजित DA % प्रमाणे)", "NPS Corpus Treatment": "NPS कॉर्पसची विभागणी", "60% deposited with Govt · 40% annuity (adjusted against pension) · no NPS lump sum": "60% शासनाकडे जमा · 40% ॲन्युइटी (पेन्शनमधून समायोजित) · NPS ची एकरकमी रक्कम नाही", "Retirement gratuity applies under RNPS": "RNPS अंतर्गत सेवानिवृत्ती उपदान लागू", "Family Pension": "कुटुंब निवृत्तीवेतन", "60% of admissible pension + dearness relief": "देय पेन्शनच्या 60% + महागाई सवलत", "📊 Visual Comparison": "📊 आलेखाद्वारे तुलना", "Lump Sum & Corpus": "एकरकमी रक्कम व कॉर्पस", "Pay Growth": "वेतन वाढ", "Cumulative (20 yrs)": "एकत्रित (20 वर्षे)", "Nominal vs Real Value": "नाममात्र विरुद्ध वास्तविक मूल्य", "NPS pension remains fixed; UPS pension grows annually with DA hikes.": "NPS पेन्शन स्थिर राहते; UPS पेन्शन DA वाढीबरोबर दरवर्षी वाढते.", "Nominal = future rupee amount · Real (PV) = equivalent purchasing power in today's rupees · Inflation-discounted using your entered rate.": "नाममात्र = भविष्यातील रुपयांतील रक्कम · वास्तविक (PV) = आजच्या रुपयांतील क्रयशक्ती · तुम्ही दिलेल्या महागाई दराने कमी केलेले मूल्य.", "Career & Pay Timeline": "सेवा व वेतन वेळरेषा", "Pay Progression Details": "वेतन प्रगतीचा तपशील", "Year": "वर्ष", "Event": "घटना", "Designation": "पदनाम", "Basic Pay (₹)": "मूळ वेतन (₹)", "Gross Pay (₹)": "एकूण वेतन (₹)", "Key Insights & Recommendations": "महत्त्वाचे निष्कर्ष व शिफारसी", "Disclaimer:": "अस्वीकरण:", "Projections are based on assumptions about future pay commissions, DA rates, and NPS returns. Actual benefits may vary. Future CPC fitment factors are estimated, not officially announced. Professor promotion is applied after completing specified years from joining, per UGC CAS norms. NPS corpus is market-linked. UPS availability depends on institution adoption. Consult your institution's finance cell and a certified financial advisor for official figures.": "भविष्यातील वेतन आयोग, DA दर आणि NPS परतावा याबाबतच्या गृहीतकांवर हे अंदाज आधारित आहेत. प्रत्यक्ष लाभ वेगळे असू शकतात. भविष्यातील आयोगांचे फिटमेंट फॅक्टर अंदाजित आहेत, अधिकृतपणे जाहीर झालेले नाहीत. UGC CAS नियमांनुसार, रुजू झाल्यापासून ठरावीक वर्षे पूर्ण झाल्यावर प्राध्यापक पदोन्नती गृहीत धरली आहे. NPS कॉर्पस बाजाराशी निगडित आहे. UPS ची उपलब्धता संस्थेने ती स्वीकारण्यावर अवलंबून आहे. अधिकृत आकडेवारीसाठी तुमच्या संस्थेच्या वित्त विभागाचा व प्रमाणित आर्थिक सल्लागाराचा सल्ला घ्या.", "← Recalculate": "← पुन्हा मोजा", "Higher Education Pension Calculator · UGC Pay Commission Reference Tool · 2025": "उच्च शिक्षण पेन्शन कॅल्क्युलेटर · UGC वेतन आयोग संदर्भ साधन · 2025", "UPS Option & Contribution Rates": "UPS पर्याय व अंशदान दर", "If you opt for UPS, the government contribution changes from the opt-in month. Enter the month you opt for UPS; before that date NPS rates apply.": "UPS निवडल्यास शासनाचे अंशदान निवडीच्या महिन्यापासून बदलते. UPS कोणत्या महिन्यापासून निवडता ते भरा; त्या तारखेपूर्वी NPS चे दर लागू राहतात.", "UPS Opt-in Date": "UPS निवडण्याची तारीख", "UPS contribution rates apply from this month. Default 1 April 2025 (or joining date if later).": "UPS चे अंशदान दर या महिन्यापासून लागू. डीफॉल्ट 1 एप्रिल 2025 (किंवा रुजू होण्याची तारीख, जी नंतर असेल ती).", "UPS Govt Contribution – Your Account (%)": "UPS शासन अंशदान – तुमच्या खात्यात (%)", "Credited to your individual corpus (matches your 10%)": "तुमच्या वैयक्तिक कॉर्पसमध्ये जमा (तुमच्या 10% इतके)", "UPS Govt Contribution – Common Pool (%)": "UPS शासन अंशदान – सामायिक पूल (%)", "Paid to the pool corpus – not credited to you": "पूल कॉर्पसमध्ये जमा – तुमच्या खात्यात नाही", "Particulars": "तपशील", "UPS (Central)": "UPS (केंद्र)", "Maharashtra RNPS / NPS": "महाराष्ट्र RNPS / NPS", "Employee contribution": "कर्मचारी अंशदान", "Government contribution": "शासन अंशदान", "Total contribution": "एकूण अंशदान", "Govt contribution to individual pension account": "वैयक्तिक पेन्शन खात्यात शासन अंशदान", "Additional govt contribution to common pool": "सामायिक पूलमध्ये अतिरिक्त शासन अंशदान", "Individual Corpus at Retirement (UPS)": "सेवानिवृत्तीच्या वेळी वैयक्तिक कॉर्पस (UPS)", "Govt Contribution to Common Pool": "सामायिक पूलमध्ये शासनाचे अंशदान", "Total paid by Govt into the pool corpus — not credited to you; it funds the assured pension": "शासनाने पूल कॉर्पसमध्ये भरलेली एकूण रक्कम — तुमच्या खात्यात जमा नाही; ती निश्चित पेन्शनसाठी वापरली जाते"};
+const SKIP_SEL = '#careerTimeline,#payTable,#recommendations,#summaryChips,#winnerText,#winnerSub,#pvInsightText,#startingBasicHint,#upsPensionNote,#upsICNote,.lang-toggle,script,style';
 
 function applyLang() {
   document.documentElement.lang = LANG;
@@ -571,7 +596,14 @@ function updateStartingPayHint(resetValue = true) {
 
 // Also trigger hint on joining date change
 document.addEventListener('DOMContentLoaded', ()=>{
+  document.getElementById('upsOptDate').value = '2025-04-01';
+  document.getElementById('upsOptDate').addEventListener('input', e => { e.target.dataset.edited = '1'; });
   document.getElementById('joiningDate').addEventListener('change', ()=>{
+    const od = document.getElementById('upsOptDate');
+    if (!od.dataset.edited) {
+      const j = document.getElementById('joiningDate').value;
+      od.value = (j && j > '2025-04-01') ? j : '2025-04-01';
+    }
     computeDerived();
     updateStartingPayHint(true);
   });
@@ -618,6 +650,13 @@ function calculate(noScroll) {
   const fdOn       = document.getElementById('fdInvest').value === 'yes';
   const fdRate     = (parseFloat(document.getElementById('fdRate').value) || 0)/100;
   const inflation  = parseFloat(document.getElementById('inflationRate').value)/100;
+  // UPS option: contribution rates switch from the opt-in month
+  const upsGovtInd  = (parseFloat(document.getElementById('upsGovtInd').value)  || 0)/100;   // to your individual corpus
+  const upsGovtPool = (parseFloat(document.getElementById('upsGovtPool').value) || 0)/100;   // to common pool
+  const optVal = document.getElementById('upsOptDate').value;
+  const optD   = optVal ? new Date(optVal) : new Date(Math.max(joinD.getTime(), new Date('2025-04-01').getTime()));
+  const optY   = optD.getFullYear(), optM = optD.getMonth();           // month is inclusive
+  const upsInService = optD <= retD;
 
   // ── 6th CPC UGC pay scales (Pay Band min + Grade Pay = effective basic) ──
   // Asst. Prof:  PB-3 ₹15,600 + GP ₹6,000  → entry ₹21,600
@@ -682,6 +721,8 @@ function calculate(noScroll) {
   let dAssoc = false, dProf = false;
   const usedCPCs = new Set();
   let npsCorpusRunning = npsNow;
+  let upsCorpusRunning = npsNow;     // UPS individual corpus (existing NPS corpus is carried over on opting)
+  let upsPoolPaid = 0;               // nominal Govt contribution into the common pool
   const mRet = npsRet / 12;
 
   for (let y = joinYear; y <= retYear; y++) {
@@ -747,6 +788,17 @@ function calculate(noScroll) {
     } else {
       npsCorpusRunning += monthlyContrib * 12;
     }
+    // UPS path: NPS govt rate until the opt-in month, UPS rates (10% own account + 8.5% pool) from then on
+    const fracUps  = !upsInService ? 0 : (y < optY ? 0 : y > optY ? 1 : (12 - optM) / 12);
+    const govtInd  = fracUps * upsGovtInd + (1 - fracUps) * empR;
+    const monthlyContribUps = curBasic * (empPct + govtInd);
+    upsCorpusRunning *= (1 + npsRet);
+    if (mRet > 0) {
+      upsCorpusRunning += monthlyContribUps * (Math.pow(1 + mRet, 12) - 1) / mRet;
+    } else {
+      upsCorpusRunning += monthlyContribUps * 12;
+    }
+    upsPoolPaid += curBasic * upsGovtPool * 12 * fracUps;
 
     const notable = evType !== 'normal' || y === joinYear || y === retYear || y % 5 === 0;
     if (notable) {
@@ -772,12 +824,22 @@ function calculate(noScroll) {
   const yToR     = Math.max(0, (retD - new Date()) / (1000*60*60*24*365.25));
 
   // ── UPS ──
-  const upsPension  = retBasic * 0.5;
+  // UPS: full 50% needs 25 yrs. 10–25 yrs → proportionate (50% × service/25), min ₹10,000/month. <10 yrs → no UPS pension.
+  const UPS_MIN = 10000;
+  const upsEligible = totalYrs >= 10;
+  const upsFactor   = totalYrs >= 25 ? 1 : totalYrs / 25;
+  const upsPct      = 50 * upsFactor;                                   // effective % of last basic
+  const upsCalc     = retBasic * 0.5 * upsFactor;
+  const upsMinApplied = upsEligible && upsCalc < UPS_MIN;
+  const upsPension  = upsEligible ? Math.max(upsCalc, UPS_MIN) : 0;
   const sixBlocks   = Math.floor(totalYrs * 2);
   const upsLumpsum  = (1/10) * retBasic * (1 + retDA/100) * sixBlocks;
   const upsGratuity = Math.min((15/26) * retBasic * Math.min(totalYrs, 33), 2000000);
 
   // ── NPS final figures ──
+  const upsIC          = upsCorpusRunning;
+  const upsIcWithdraw  = upsIC * 0.6;    // up to 60% of individual corpus (capped at benchmark corpus — not modelled)
+  const upsIcToPool    = upsIC * 0.4;    // balance 40% moves to the pool corpus
   const npsTotalCorpus    = npsCorpusRunning;
   const npsAnnuityCorpus  = npsTotalCorpus * annPct;
   const npsLumpsum        = npsTotalCorpus * (1 - annPct);
@@ -794,7 +856,8 @@ function calculate(noScroll) {
   const rnpsEligible = totalYrs >= 10;
   const rnpsFactor   = totalYrs >= 20 ? 1 : totalYrs / 20;
   const rnpsPension  = rnpsEligible ? Math.max(retBasic * 0.5 * rnpsFactor, RNPS_MIN) : 0;
-  const rnpsPensionDR = rnpsPension * (1 + retDA/100);
+  const rnpsPensionDR = rnpsPension * (1 + retDA/100);   // RNPS pension + dearness relief at retirement
+  const upsPensionDR  = upsPension  * (1 + retDA/100);   // UPS pension + dearness relief at retirement
   const rnpsGovtCorpus    = npsTotalCorpus * 0.6;
   const rnpsAnnuityCorpus = npsTotalCorpus * 0.4;
   const rnpsGratuity = npsGratuity;
@@ -802,8 +865,8 @@ function calculate(noScroll) {
 
   // ── Winner (all three include gratuity for a like-for-like score) ──
   const npsScore  = npsMonthlyPension + (npsLumpsum + npsGratuity) / 120;
-  const upsScore  = upsPension + (upsLumpsum + upsGratuity) / 120;
-  const rnpsScore = rnpsPension + rnpsGratuity / 120;
+  const upsScore  = upsPensionDR + (upsLumpsum + upsGratuity + upsIcWithdraw) / 120;
+  const rnpsScore = rnpsPensionDR + rnpsGratuity / 120;
   const scores    = [{k:'NPS',v:npsScore},{k:'UPS',v:upsScore},{k:'RNPS',v:rnpsScore}].sort((a,b)=>b.v-a.v);
   const winner    = scores[0].k;
 
@@ -828,7 +891,7 @@ function calculate(noScroll) {
   };
   document.getElementById('winnerText').textContent = L(`${winnerNames[winner]} scores highest on the combined benefit measure`, `एकत्रित लाभाच्या मोजमापात ${winnerNames[winner]} सर्वाधिक ठरते`);
   document.getElementById('winnerSub').textContent =
-    L(`Monthly: NPS ${fmt(npsMonthlyPension)} · UPS ${fmt(upsPension)} · RNPS ${fmt(rnpsPension)}. `, `मासिक: NPS ${fmt(npsMonthlyPension)} · UPS ${fmt(upsPension)} · RNPS ${fmt(rnpsPension)}. `) +
+    L(`Monthly (UPS/RNPS incl. DR): NPS ${fmt(npsMonthlyPension)} · UPS ${fmt(upsPensionDR)} · RNPS ${fmt(rnpsPensionDR)}. `, `मासिक (UPS/RNPS महागाई सवलतीसह): NPS ${fmt(npsMonthlyPension)} · UPS ${fmt(upsPensionDR)} · RNPS ${fmt(rnpsPensionDR)}. `) +
     L(`Note: UPS is a Central Government scheme — Maharashtra state/aided-college staff should compare NPS with RNPS.`, `टीप: UPS ही केंद्र सरकारची योजना आहे — महाराष्ट्र राज्य/अनुदानित महाविद्यालयीन कर्मचाऱ्यांनी NPS ची तुलना RNPS शी करावी.`);
 
   document.getElementById('npsTotalCorpus').textContent    = fmt(npsTotalCorpus);
@@ -840,7 +903,13 @@ function calculate(noScroll) {
       : L(`${Math.round(annPct*100)}% corpus (${fmt(npsAnnuityCorpus)}) annuitised @ ${Math.round(annRate*100)}%`,
           `${Math.round(annPct*100)}% कॉर्पस (${fmt(npsAnnuityCorpus)}) ॲन्युइटीसाठी @ ${Math.round(annRate*100)}%`);
   document.getElementById('npsGratuity').textContent       = fmt(npsGratuity);
-  document.getElementById('upsMonthlyPension').textContent = `₹${Math.round(upsPension).toLocaleString('en-IN')}${MO()}`;
+  document.getElementById('upsMonthlyPension').textContent = upsEligible ? `₹${Math.round(upsPension).toLocaleString('en-IN')}${MO()}` : L('Not eligible','पात्र नाही');
+  document.getElementById('upsPensionNote').textContent = !upsEligible
+    ? L('Less than 10 years of service — no assured UPS pension','10 वर्षांपेक्षा कमी सेवा — UPS अंतर्गत निश्चित पेन्शन नाही')
+    : totalYrs >= 25
+      ? L('50% of last 12-month avg basic (25+ years of service)','शेवटच्या 12 महिन्यांच्या सरासरी मूळ वेतनाच्या 50% (25+ वर्षे सेवा)')
+      : L(`Reduced: ${upsPct.toFixed(1)}% of last basic (50% × ${totalYrs.toFixed(1)}/25 yrs)${upsMinApplied?' — minimum ₹10,000 applied':''}`,
+          `कमी केलेली: शेवटच्या मूळ वेतनाच्या ${upsPct.toFixed(1)}% (50% × ${totalYrs.toFixed(1)}/25 वर्षे)${upsMinApplied?' — किमान ₹10,000 लागू':''}`);
   document.getElementById('upsLumpsum').textContent        = fmt(upsLumpsum);
   document.getElementById('upsGratuity').textContent       = fmt(upsGratuity);
 
@@ -867,6 +936,9 @@ function calculate(noScroll) {
   const pvUpsLumpsum  = upsLumpsum        * pvFactor;
   const pvUpsGratuity = upsGratuity       * pvFactor;
   const pvRnpsPension = rnpsPension       * pvFactor;
+  const pvUpsPensionDR  = upsPensionDR  * pvFactor;
+  const pvUpsIC         = upsIC         * pvFactor;
+  const pvRnpsPensionDR = rnpsPensionDR * pvFactor;
   const pvRnpsGratuity= rnpsGratuity      * pvFactor;
 
   document.getElementById('pvNpsCorpus').textContent   = fmt(pvNpsCorpus);
@@ -877,6 +949,18 @@ function calculate(noScroll) {
   document.getElementById('pvUpsLumpsum').textContent  = fmt(pvUpsLumpsum);
   document.getElementById('pvUpsGratuity').textContent = fmt(pvUpsGratuity);
   document.getElementById('pvRnpsPension').textContent  = fmt(pvRnpsPension);
+  document.getElementById('pvRnpsPensionDR').textContent = fmt(pvRnpsPensionDR);
+  document.getElementById('pvUpsPensionDR').textContent  = fmt(pvUpsPensionDR);
+  document.getElementById('upsIC').textContent = fmt(upsIC);
+  document.getElementById('pvUpsIC').textContent = fmt(pvUpsIC);
+  document.getElementById('upsICNote').textContent = !upsInService
+    ? L('UPS opt-in date is after your retirement — no UPS contribution applies; corpus equals NPS corpus.','UPS निवडण्याची तारीख सेवानिवृत्तीनंतरची आहे — UPS अंशदान लागू नाही; कॉर्पस NPS कॉर्पस इतकाच.')
+    : L(
+    `Opt-in ${optD.toLocaleDateString(LOC(),{month:'short',year:'numeric'})}: Govt ${((upsGovtInd+upsGovtPool)*100).toFixed(1)}% (${(upsGovtInd*100).toFixed(1)}% own account + ${(upsGovtPool*100).toFixed(1)}% pool). Withdraw up to 60% = ${fmt(upsIcWithdraw)}; 40% (${fmt(upsIcToPool)}) moves to pool.`,
+    `निवड ${optD.toLocaleDateString(LOC(),{month:'short',year:'numeric'})}: शासन ${((upsGovtInd+upsGovtPool)*100).toFixed(1)}% (${(upsGovtInd*100).toFixed(1)}% तुमच्या खात्यात + ${(upsGovtPool*100).toFixed(1)}% पूलमध्ये). 60% = ${fmt(upsIcWithdraw)} काढता येते; 40% (${fmt(upsIcToPool)}) पूलमध्ये जाते.`);
+  document.getElementById('upsPoolPaid').textContent = fmt(upsPoolPaid);
+  document.getElementById('upsPensionDR').textContent = upsEligible ? `₹${Math.round(upsPensionDR).toLocaleString('en-IN')}${MO()}` : '—';
+  document.getElementById('npsAnnuityNote').textContent += L(' · No DR on NPS annuity', ' · NPS ॲन्युइटीवर महागाई सवलत नाही');
   document.getElementById('pvRnpsGratuity').textContent = fmt(pvRnpsGratuity);
 
   const pvBanner = document.getElementById('pvInsightBanner');
@@ -888,10 +972,10 @@ function calculate(noScroll) {
       `सेवानिवृत्तीच्या वेळचा ₹1 = आजचे <strong style="color:var(--accent3)">₹${pvFactor.toFixed(3)}</strong>. `) +
     L(`NPS corpus <strong style="color:var(--nps)">${fmt(npsTotalCorpus)}</strong> → <strong style="color:var(--accent3)">${fmt(pvNpsCorpus)}</strong> in today's money. `,
       `NPS कॉर्पस <strong style="color:var(--nps)">${fmt(npsTotalCorpus)}</strong> → आजच्या मूल्यात <strong style="color:var(--accent3)">${fmt(pvNpsCorpus)}</strong>. `) +
-    L(`UPS pension <strong style="color:var(--ups)">${fmt(upsPension)}/mo</strong> → <strong style="color:var(--accent3)">${fmt(pvUpsPension)}/mo</strong> purchasing power today. `,
-      `UPS पेन्शन <strong style="color:var(--ups)">${fmt(upsPension)}${MO()}</strong> → आजची क्रयशक्ती <strong style="color:var(--accent3)">${fmt(pvUpsPension)}${MO()}</strong>. `) +
-    L(`RNPS pension <strong style="color:var(--rnps)">${fmt(rnpsPension)}/mo</strong> → <strong style="color:var(--accent3)">${fmt(pvRnpsPension)}/mo</strong>.`,
-      `RNPS पेन्शन <strong style="color:var(--rnps)">${fmt(rnpsPension)}${MO()}</strong> → <strong style="color:var(--accent3)">${fmt(pvRnpsPension)}${MO()}</strong>.`) +
+    L(`UPS pension incl. DR <strong style="color:var(--ups)">${fmt(upsPensionDR)}/mo</strong> → <strong style="color:var(--accent3)">${fmt(pvUpsPensionDR)}/mo</strong> purchasing power today. `,
+      `UPS पेन्शन (DR सह) <strong style="color:var(--ups)">${fmt(upsPensionDR)}${MO()}</strong> → आजची क्रयशक्ती <strong style="color:var(--accent3)">${fmt(pvUpsPensionDR)}${MO()}</strong>. `) +
+    L(`RNPS pension incl. DR <strong style="color:var(--rnps)">${fmt(rnpsPensionDR)}/mo</strong> → <strong style="color:var(--accent3)">${fmt(pvRnpsPensionDR)}/mo</strong>.`,
+      `RNPS पेन्शन (DR सह) <strong style="color:var(--rnps)">${fmt(rnpsPensionDR)}${MO()}</strong> → <strong style="color:var(--accent3)">${fmt(pvRnpsPensionDR)}${MO()}</strong>.`) +
     (joinedUnder6th ? `<br><em style="color:var(--muted)">📌 ${L('6th CPC pay applied from joining through June 2016. 7th CPC fitment 2.67× applied from July 1, 2016.','रुजू झाल्यापासून जून 2016 पर्यंत 6 व्या आयोगाचे वेतन लागू. 1 जुलै 2016 पासून 7 व्या आयोगाचा 2.67× फिटमेंट लागू.')}</em>` : '') +
     `<br><em style="color:var(--muted)">📌 ${L(`NPS employer contribution: ${Math.round(empRold*100)}% until March 2019, raised to ${Math.round(empRnew*100)}% from April 1, 2019 — applied year-by-year in corpus calculation.`,`NPS नियोक्ता अंशदान: मार्च 2019 पर्यंत ${Math.round(empRold*100)}%, 1 एप्रिल 2019 पासून ${Math.round(empRnew*100)}% — कॉर्पस गणनेत वर्षानुसार लागू केले.`)}</em>`;
 
@@ -901,18 +985,18 @@ function calculate(noScroll) {
       labels:[L('Monthly Pension','मासिक पेन्शन')],
       datasets:[
         {label:L('NPS Monthly (Annuity + FD)','NPS मासिक (ॲन्युइटी + FD)'), data:[Math.round(npsMonthlyPension)], backgroundColor:'rgba(126,184,212,.75)', borderColor:'#7eb8d4', borderWidth:2, borderRadius:10},
-        {label:L('UPS Monthly Pension','UPS मासिक पेन्शन'), data:[Math.round(upsPension)],        backgroundColor:'rgba(201,168,76,.75)',  borderColor:'#c9a84c', borderWidth:2, borderRadius:10},
-        {label:L('RNPS Monthly Pension (Maharashtra)','RNPS मासिक पेन्शन (महाराष्ट्र)'), data:[Math.round(rnpsPension)], backgroundColor:'rgba(195,155,211,.75)', borderColor:'#c39bd3', borderWidth:2, borderRadius:10},
+        {label:L('UPS Monthly Pension (incl. DR)','UPS मासिक पेन्शन (DR सह)'), data:[Math.round(upsPensionDR)],        backgroundColor:'rgba(201,168,76,.75)',  borderColor:'#c9a84c', borderWidth:2, borderRadius:10},
+        {label:L('RNPS Monthly Pension (incl. DR)','RNPS मासिक पेन्शन (DR सह)'), data:[Math.round(rnpsPensionDR)], backgroundColor:'rgba(195,155,211,.75)', borderColor:'#c39bd3', borderWidth:2, borderRadius:10},
       ]
     }, BASE_OPTS(L('Monthly Pension (₹)','मासिक पेन्शन (₹)')));
 
     mkChart('chartLumpsum','bar',{
-      labels:[L('NPS Corpus','NPS कॉर्पस'),L('NPS Lump Sum','NPS एकरकमी'),L('NPS Gratuity','NPS उपदान'),L('UPS Lump Sum','UPS एकरकमी'),L('UPS Gratuity','UPS उपदान'),L('RNPS Gratuity','RNPS उपदान')],
+      labels:[L('NPS Corpus','NPS कॉर्पस'),L('NPS Lump Sum','NPS एकरकमी'),L('NPS Gratuity','NPS उपदान'),L('UPS Lump Sum','UPS एकरकमी'),L('UPS Gratuity','UPS उपदान'),L('UPS Corpus Withdrawal (60%)','UPS कॉर्पस काढणे (60%)'),L('RNPS Gratuity','RNPS उपदान')],
       datasets:[{
         label:L('Amount (₹)','रक्कम (₹)'),
-        data:[Math.round(npsTotalCorpus),Math.round(npsLumpsum),Math.round(npsGratuity),Math.round(upsLumpsum),Math.round(upsGratuity),Math.round(rnpsGratuity)],
-        backgroundColor:['rgba(126,184,212,.8)','rgba(126,184,212,.5)','rgba(111,207,151,.6)','rgba(201,168,76,.8)','rgba(201,168,76,.5)','rgba(195,155,211,.7)'],
-        borderColor:['#7eb8d4','#7eb8d4','#6fcf97','#c9a84c','#c9a84c','#c39bd3'],
+        data:[Math.round(npsTotalCorpus),Math.round(npsLumpsum),Math.round(npsGratuity),Math.round(upsLumpsum),Math.round(upsGratuity),Math.round(upsIcWithdraw),Math.round(rnpsGratuity)],
+        backgroundColor:['rgba(126,184,212,.8)','rgba(126,184,212,.5)','rgba(111,207,151,.6)','rgba(201,168,76,.8)','rgba(201,168,76,.5)','rgba(201,168,76,.3)','rgba(195,155,211,.7)'],
+        borderColor:['#7eb8d4','#7eb8d4','#6fcf97','#c9a84c','#c9a84c','#c9a84c','#c39bd3'],
         borderWidth:2, borderRadius:8,
       }]
     },{...BASE_OPTS(L('Amount (₹)','रक्कम (₹)')), plugins:{legend:{display:false}, tooltip:{backgroundColor:'#1a1e27',borderColor:'#252a36',borderWidth:1,titleColor:'#e8e6e0',bodyColor:'#7a8099',callbacks:{label:ctx=>' ₹'+Math.round(ctx.parsed.y).toLocaleString('en-IN')}}}});
@@ -926,9 +1010,9 @@ function calculate(noScroll) {
     }, BASE_OPTS(L('Pay (₹)','वेतन (₹)')));
 
     const cumLbls = Array.from({length:21},(_,i)=>L('Yr ','वर्ष ')+i);
-    let cNPS=0, cUPS=0, cRNPS=0, upsMo=upsPension, rnpsMo=rnpsPension; const dNPS=[0], dUPS=[0], dRNPS=[0];
+    let cNPS=0, cUPS=0, cRNPS=0; const dNPS=[0], dUPS=[0], dRNPS=[0];
     for(let i=1;i<=20;i++){
-      cNPS+=npsMonthlyPension*12; cUPS+=upsMo*12; cRNPS+=rnpsMo*12; upsMo*=(1+daG/100); rnpsMo*=(1+daG/100);
+      cNPS+=npsMonthlyPension*12; const drI=(retDA+daG*(i-1))/100; cUPS+=upsPension*(1+drI)*12; cRNPS+=rnpsPension*(1+drI)*12;
       dNPS.push(Math.round(cNPS)); dUPS.push(Math.round(cUPS)); dRNPS.push(Math.round(cRNPS));
     }
     mkChart('chartCumulative','line',{
@@ -940,10 +1024,10 @@ function calculate(noScroll) {
       ]
     }, BASE_OPTS(L('Total Pension Received (₹)','मिळालेली एकूण पेन्शन (₹)')));
 
-    const pvNominals = [npsTotalCorpus,npsLumpsum,npsMonthlyPension*12,npsGratuity,upsPension*12,upsLumpsum,upsGratuity,rnpsPension*12,rnpsGratuity];
-    const pvReals    = [pvNpsCorpus,pvNpsLumpsum,pvNpsPension*12,pvNpsGratuity,pvUpsPension*12,pvUpsLumpsum,pvUpsGratuity,pvRnpsPension*12,pvRnpsGratuity];
+    const pvNominals = [npsTotalCorpus,npsLumpsum,npsMonthlyPension*12,npsGratuity,upsPensionDR*12,upsLumpsum,upsGratuity,rnpsPensionDR*12,rnpsGratuity];
+    const pvReals    = [pvNpsCorpus,pvNpsLumpsum,pvNpsPension*12,pvNpsGratuity,pvUpsPensionDR*12,pvUpsLumpsum,pvUpsGratuity,pvRnpsPensionDR*12,pvRnpsGratuity];
     mkChart('chartPvcompare','bar',{
-      labels:[L('NPS Corpus','NPS कॉर्पस'),L('NPS Lump Sum','NPS एकरकमी'),L('NPS Monthly×12','NPS मासिक×12'),L('NPS Gratuity','NPS उपदान'),L('UPS Monthly×12','UPS मासिक×12'),L('UPS Lump Sum','UPS एकरकमी'),L('UPS Gratuity','UPS उपदान'),L('RNPS Monthly×12','RNPS मासिक×12'),L('RNPS Gratuity','RNPS उपदान')],
+      labels:[L('NPS Corpus','NPS कॉर्पस'),L('NPS Lump Sum','NPS एकरकमी'),L('NPS Monthly×12','NPS मासिक×12'),L('NPS Gratuity','NPS उपदान'),L('UPS Monthly×12 (incl. DR)','UPS मासिक×12 (DR सह)'),L('UPS Lump Sum','UPS एकरकमी'),L('UPS Gratuity','UPS उपदान'),L('RNPS Monthly×12 (incl. DR)','RNPS मासिक×12 (DR सह)'),L('RNPS Gratuity','RNPS उपदान')],
       datasets:[
         {label:L('Nominal (Future ₹)','नाममात्र (भविष्यातील ₹)'),  data:pvNominals.map(Math.round), backgroundColor:'rgba(126,184,212,.5)', borderColor:'#7eb8d4', borderWidth:2, borderRadius:6},
         {label:L(`Real PV @ ${Math.round(inflation*100)}% inflation`,`वास्तविक PV @ ${Math.round(inflation*100)}% महागाई`), data:pvReals.map(Math.round), backgroundColor:'rgba(201,168,76,.6)', borderColor:'#c9a84c', borderWidth:2, borderRadius:6},
@@ -961,6 +1045,9 @@ function calculate(noScroll) {
     ...(joinYear <= NPS14_YEAR && retYear >= NPS14_YEAR
       ? [{year:NPS14_YEAR, label:L('NPS Employer Contribution Revised','NPS नियोक्ता अंशदान सुधारित'),
           detail:L(`Raised from ${Math.round(empRold*100)}% → ${Math.round(empRnew*100)}% w.e.f. April 1, 2019`,`1 एप्रिल 2019 पासून ${Math.round(empRold*100)}% वरून ${Math.round(empRnew*100)}% केले`), type:'nps'}] : []),
+    ...(upsInService && optY >= joinYear ? [{year:optY, label:L('Opted for UPS','UPS निवडले'),
+          detail:L(`From ${optD.toLocaleDateString(LOC(),{month:'long',year:'numeric'})}: Govt contribution ${((upsGovtInd+upsGovtPool)*100).toFixed(1)}% (${(upsGovtInd*100).toFixed(1)}% to your account + ${(upsGovtPool*100).toFixed(1)}% to common pool); employee 10%.`,
+                   `${optD.toLocaleDateString(LOC(),{month:'long',year:'numeric'})} पासून: शासन अंशदान ${((upsGovtInd+upsGovtPool)*100).toFixed(1)}% (${(upsGovtInd*100).toFixed(1)}% तुमच्या खात्यात + ${(upsGovtPool*100).toFixed(1)}% सामायिक पूलमध्ये); कर्मचारी 10%.`), type:'nps'}] : []),
     ...(willAssoc ? [{year:assocDate.getFullYear(), label:evl('Promoted: Associate Professor'),
       detail:L(`After ${assocYrs} yrs · ${assocDate.getFullYear()<CPC7_YEAR?'PB-4 + GP ₹9,000 (6th CPC)':'Level 13A (7th CPC)'} · Entry basic: ${fmt(assocDate.getFullYear()<CPC7_YEAR?CPC6.assoc:UGC_PAY.assoc)}`,
                `${assocYrs} वर्षांनंतर · ${assocDate.getFullYear()<CPC7_YEAR?'PB-4 + ग्रेड पे ₹9,000 (6 वा आयोग)':'स्तर 13A (7 वा आयोग)'} · सुरुवातीचे मूळ वेतन: ${fmt(assocDate.getFullYear()<CPC7_YEAR?CPC6.assoc:UGC_PAY.assoc)}`), type:'promo'}] : []),
@@ -1022,17 +1109,22 @@ function calculate(noScroll) {
       : L(`Your service of ${totalYrs.toFixed(0)} years does not reach the ${profYrs}-year Professor threshold.`,
           `तुमची ${totalYrs.toFixed(0)} वर्षांची सेवा प्राध्यापक पदासाठीच्या ${profYrs}-वर्षांच्या मर्यादेपर्यंत पोहोचत नाही.`),
     rnpsEligible
-      ? L(`<strong>Maharashtra RNPS:</strong> assured pension <strong>${fmt(rnpsPension)}/month</strong> (${totalYrs>=20?'50% of last basic':'proportionate, '+totalYrs.toFixed(1)+'/20 yrs'}) plus dearness relief, gratuity and 60% family pension. Employees already under NPS must <strong>opt in by 31 December 2026</strong>; any past NPS withdrawals must be refunded with 10% interest.`,
-          `<strong>महाराष्ट्र RNPS:</strong> निश्चित पेन्शन <strong>${fmt(rnpsPension)}/महिना</strong> (${totalYrs>=20?'शेवटच्या मूळ वेतनाच्या 50%':'प्रमाणशीर, '+totalYrs.toFixed(1)+'/20 वर्षे'}) तसेच महागाई सवलत, उपदान आणि 60% कुटुंब निवृत्तीवेतन. सध्या NPS मध्ये असलेल्या कर्मचाऱ्यांनी <strong>31 डिसेंबर 2026 पर्यंत पर्याय</strong> द्यावा; NPS मधून पूर्वी काढलेली रक्कम 10% व्याजासह परत करावी लागेल.`)
+      ? L(`<strong>Maharashtra RNPS:</strong> assured pension <strong>${fmt(rnpsPension)}/month</strong> — <strong>${fmt(rnpsPensionDR)}</strong> incl. DR at ${retDA}% (PV today <strong>${fmt(pvRnpsPensionDR)}</strong>) (${totalYrs>=20?'50% of last basic':'proportionate, '+totalYrs.toFixed(1)+'/20 yrs'}) plus dearness relief, gratuity and 60% family pension. Employees already under NPS must <strong>opt in by 31 December 2026</strong>; any past NPS withdrawals must be refunded with 10% interest.`,
+          `<strong>महाराष्ट्र RNPS:</strong> निश्चित पेन्शन <strong>${fmt(rnpsPension)}/महिना</strong> — ${retDA}% DR सह <strong>${fmt(rnpsPensionDR)}</strong> (आजचे मूल्य <strong>${fmt(pvRnpsPensionDR)}</strong>) (${totalYrs>=20?'शेवटच्या मूळ वेतनाच्या 50%':'प्रमाणशीर, '+totalYrs.toFixed(1)+'/20 वर्षे'}) तसेच महागाई सवलत, उपदान आणि 60% कुटुंब निवृत्तीवेतन. सध्या NPS मध्ये असलेल्या कर्मचाऱ्यांनी <strong>31 डिसेंबर 2026 पर्यंत पर्याय</strong> द्यावा; NPS मधून पूर्वी काढलेली रक्कम 10% व्याजासह परत करावी लागेल.`)
       : L(`<strong>Maharashtra RNPS:</strong> requires at least 10 years of service for any pension — your projected service is ${totalYrs.toFixed(1)} years.`,
           `<strong>महाराष्ट्र RNPS:</strong> कोणत्याही पेन्शनसाठी किमान 10 वर्षे सेवा आवश्यक — तुमची अपेक्षित सेवा ${totalYrs.toFixed(1)} वर्षे आहे.`),
-    L(`UPS pension: <strong>${fmt(upsPension)}/month</strong> · NPS pension: <strong>${fmt(npsMonthlyPension)}/month</strong>${fdOn?` (annuity ${fmt(npsAnnuityPension)} + FD interest ${fmt(npsFdIncome)})`:''}. UPS is DA-indexed and grows annually; NPS annuity and FD interest are fixed.`,
-      `UPS पेन्शन: <strong>${fmt(upsPension)}/महिना</strong> · NPS पेन्शन: <strong>${fmt(npsMonthlyPension)}/महिना</strong>${fdOn?` (ॲन्युइटी ${fmt(npsAnnuityPension)} + FD व्याज ${fmt(npsFdIncome)})`:''}. UPS DA शी जोडलेली असून दरवर्षी वाढते; NPS ॲन्युइटी व FD व्याज स्थिर असतात.`),
+    L(`UPS pension: <strong>${fmt(upsPension)}/month</strong> (<strong>${fmt(upsPensionDR)}</strong> incl. DR) · NPS pension: <strong>${fmt(npsMonthlyPension)}/month</strong>${fdOn?` (annuity ${fmt(npsAnnuityPension)} + FD interest ${fmt(npsFdIncome)})`:''}. UPS is DA-indexed and grows annually; NPS annuity and FD interest are fixed.`,
+      `UPS पेन्शन: <strong>${fmt(upsPension)}/महिना</strong> (DR सह <strong>${fmt(upsPensionDR)}</strong>) · NPS पेन्शन: <strong>${fmt(npsMonthlyPension)}/महिना</strong>${fdOn?` (ॲन्युइटी ${fmt(npsAnnuityPension)} + FD व्याज ${fmt(npsFdIncome)})`:''}. UPS DA शी जोडलेली असून दरवर्षी वाढते; NPS ॲन्युइटी व FD व्याज स्थिर असतात.`),
     totalYrs >= 25
-      ? L(`✅ ${totalYrs.toFixed(0)} years of service qualifies for <strong>full UPS pension</strong> (minimum 25 years required).`,
-          `✅ ${totalYrs.toFixed(0)} वर्षांची सेवा <strong>पूर्ण UPS पेन्शन</strong>साठी पात्र (किमान 25 वर्षे आवश्यक).`)
-      : L(`⚠️ UPS requires minimum 25 years for full pension. Your ${totalYrs.toFixed(0)} years may qualify for proportional or minimum guaranteed ₹10,000/month.`,
-          `⚠️ पूर्ण पेन्शनसाठी UPS ला किमान 25 वर्षे सेवा लागते. तुमची ${totalYrs.toFixed(0)} वर्षे प्रमाणशीर किंवा किमान हमी ₹10,000/महिना साठी पात्र ठरू शकतात.`),
+      ? L(`✅ ${totalYrs.toFixed(0)} years of service qualifies for <strong>full 50% UPS pension</strong> (minimum 25 years required).`,
+          `✅ ${totalYrs.toFixed(0)} वर्षांची सेवा <strong>पूर्ण 50% UPS पेन्शन</strong>साठी पात्र (किमान 25 वर्षे आवश्यक).`)
+      : upsEligible
+        ? L(`⚠️ UPS gives the full 50% only after 25 years. With ${totalYrs.toFixed(1)} years your UPS pension is reduced to <strong>${upsPct.toFixed(1)}%</strong> of last basic (50% × ${totalYrs.toFixed(1)}/25) = <strong>${fmt(upsPension)}/month</strong>${upsMinApplied?' (minimum ₹10,000 applied)':''}.`,
+            `⚠️ UPS मध्ये पूर्ण 50% पेन्शन 25 वर्षांनंतरच मिळते. ${totalYrs.toFixed(1)} वर्षांच्या सेवेमुळे तुमची UPS पेन्शन शेवटच्या मूळ वेतनाच्या <strong>${upsPct.toFixed(1)}%</strong> (50% × ${totalYrs.toFixed(1)}/25) = <strong>${fmt(upsPension)}/महिना</strong> इतकी कमी होते${upsMinApplied?' (किमान ₹10,000 लागू)':''}.`)
+        : L(`⚠️ UPS pension needs at least 10 years of service — your projected ${totalYrs.toFixed(1)} years do not qualify.`,
+            `⚠️ UPS पेन्शनसाठी किमान 10 वर्षे सेवा आवश्यक — तुमची अपेक्षित ${totalYrs.toFixed(1)} वर्षे पात्र ठरत नाहीत.`),
+    L(`<strong>UPS contribution:</strong> from ${optD.toLocaleDateString(LOC(),{month:'long',year:'numeric'})} the Govt pays ${((upsGovtInd+upsGovtPool)*100).toFixed(1)}% — only ${(upsGovtInd*100).toFixed(1)}% reaches your account, so your UPS individual corpus is <strong>${fmt(upsIC)}</strong> vs NPS corpus <strong>${fmt(npsTotalCorpus)}</strong>. In return you get the assured pension.`,
+      `<strong>UPS अंशदान:</strong> ${optD.toLocaleDateString(LOC(),{month:'long',year:'numeric'})} पासून शासन ${((upsGovtInd+upsGovtPool)*100).toFixed(1)}% देते — त्यापैकी फक्त ${(upsGovtInd*100).toFixed(1)}% तुमच्या खात्यात जमा होते, त्यामुळे UPS वैयक्तिक कॉर्पस <strong>${fmt(upsIC)}</strong> तर NPS कॉर्पस <strong>${fmt(npsTotalCorpus)}</strong>. त्या बदल्यात तुम्हाला निश्चित पेन्शन मिळते.`),
     L(`Gratuity ≈ ${fmt(upsGratuity)} — tax-exempt up to ₹20 lakh. NPS lump sum ${fmt(npsLumpsum)} — 60% is tax-free on withdrawal.`,
       `उपदान ≈ ${fmt(upsGratuity)} — ₹20 लाखांपर्यंत करमुक्त. NPS एकरकमी ${fmt(npsLumpsum)} — काढताना 60% करमुक्त.`),
   ].filter(Boolean);
